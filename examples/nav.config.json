@@ -16,6 +16,10 @@
       "name": "开发指南",
       "children": [
         {
+          "path": "/test",
+          "name": "测试"
+        },
+        {
           "path": "/installation",
           "name": "安装"
         },

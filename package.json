@@ -65,7 +65,11 @@
     "deepmerge": "^1.2.0",
     "normalize-wheel": "^1.0.1",
     "resize-observer-polyfill": "^1.5.0",
-    "throttle-debounce": "^1.0.1"
+    "throttle-debounce": "^1.0.1",
+    "fuzzysearch": "^1.0.3",
+    "is-promise": "^2.1.0",
+    "lodash": "^4.0.0",
+    "watch-size": "^2.0.0"
   },
   "peerDependencies": {
     "vue": "^2.5.17"
