@@ -1,11 +1,14 @@
 <script>
-// eslint-disable-next-line no-unused-vars
 import ElInput from 'element-ui/packages/input';
 
 export default {
   name: 'vue-treeselect--single-value',
 
   inject: ['instance'],
+
+  components: {
+    ElInput
+  },
 
   methods: {
     renderSingleValueLabel() {
@@ -20,11 +23,10 @@ export default {
   },
 
   render() {
-    // const { instance } = this;
+    const { instance } = this;
+    const shouldShowValue = instance.hasValue && !instance.trigger.searchQuery;
 
-    // const shouldShowValue = instance.hasValue && !instance.trigger.searchQuery;
-
-    return <ElInput ref="input" placeholder="请选择" />;
+    return <ElInput ref="input" placeholder="请选择" value={ shouldShowValue && this.renderSingleValueLabel()} />;
   }
 };
 </script>

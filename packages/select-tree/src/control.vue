@@ -14,7 +14,7 @@ export default {
 
     return (
       <div
-        class="vue-treeselect__control"
+        class="el-select-tree__control"
         onMousedown={instance.handleMouseDown}>
         <ValueContainer ref="value-container" />
       </div>
@@ -22,3 +22,11 @@ export default {
   }
 };
 </script>
+
+<!--
+渲染选中文本，单选 or 多选，以及多文本的处理。以及负责触发menu的展开
+1. 内容主要输出在input上
+2. 点击展开menu
+3. 单选、多选的策略选择
+-->
+

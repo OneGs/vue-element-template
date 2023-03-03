@@ -1533,7 +1533,7 @@ export default {
       if (!this.menu.isOpen || (!this.disabled && this.alwaysOpen)) return;
       this.saveMenuScrollPosition();
       this.menu.isOpen = false;
-      this.toggleClickOutsideEvent(false);
+      // this.toggleClickOutsideEvent(false);
       this.resetSearchQuery();
       this.$emit('close', this.getValue(), this.getInstanceId());
     },
@@ -1544,7 +1544,7 @@ export default {
       this.$nextTick(this.resetHighlightedOptionWhenNecessary);
       this.$nextTick(this.restoreMenuScrollPosition);
       if (!this.options && !this.async) this.loadRootOptions();
-      this.toggleClickOutsideEvent(true);
+      // this.toggleClickOutsideEvent(true);
       this.$emit('open', this.getInstanceId());
     },
 

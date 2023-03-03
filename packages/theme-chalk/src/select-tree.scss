@@ -1,0 +1,15 @@
+@import "mixins/mixins";
+@import "common/var";
+
+@include b(select-tree) {
+  position: relative;
+  cursor: default;
+  background: $--color-white;
+  color: $--tree-font-color;
+
+  @include e(control) {}
+
+  @include e(menu) {}
+
+  @include e(list) {}
+}
