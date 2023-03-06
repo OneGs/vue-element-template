@@ -1,14 +1,15 @@
 <script>
 import ElCollapseTransition from 'element-ui/src/transitions/collapse-transition';
-import { UNCHECKED, INDETERMINATE, CHECKED } from './constants';
+import ElCheckbox from 'element-ui/packages/checkbox';
 import { onLeftClick } from './utils';
+import {CHECKED, INDETERMINATE} from './constants';
 
-let arrowPlaceholder, checkMark, minusMark;
+let arrowPlaceholder;
 
 const Option = {
   name: 'vue-treeselect--option',
 
-  components: { ElCollapseTransition },
+  components: { ElCollapseTransition, ElCheckbox },
 
   inject: ['instance'],
 
@@ -133,23 +134,13 @@ const Option = {
     renderCheckbox() {
       const { instance, node } = this;
       const checkedState = instance.forest.checkedStateMap[node.id];
-      const checkboxClass = {
-        'el-select-tree__checkbox': true,
-        'el-select-tree__checkbox--checked': checkedState === CHECKED,
-        'el-select-tree__checkbox--indeterminate':
-          checkedState === INDETERMINATE,
-        'el-select-tree__checkbox--unchecked': checkedState === UNCHECKED,
-        'el-select-tree__checkbox--disabled': node.isDisabled
-      };
-
-      if (!checkMark) checkMark = <span class="el-select-tree__check-mark" />;
-      if (!minusMark) minusMark = <span class="el-select-tree__minus-mark" />;
 
       return (
-        <span class={checkboxClass}>
-          {checkMark}
-          {minusMark}
-        </span>
+        <ElCheckbox
+          disabled={ node.isDisabled }
+          value={ checkedState === CHECKED }
+          indeterminate={ checkedState === INDETERMINATE }
+        />
       );
     },
 
@@ -283,7 +274,7 @@ const Option = {
       [`el-select-tree__indent-level-${indentLevel}`]: true
     };
     const listItemStyles = {
-      paddingLeft: indentLevel * 20 + 'px'
+      paddingLeft: indentLevel * 18 * 2 + 'px'
     };
 
     return (

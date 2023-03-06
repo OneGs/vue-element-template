@@ -48,9 +48,26 @@
     transform: rotate(90deg);
   }
 
+  @include e(label) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: table-cell;
+    padding-left: 5px;
+    max-width: 100%;
+    vertical-align: middle;
+    cursor: inherit;
+  }
+
   @include e(label-container) {
     font-size: 14px;
     flex: 1;
+    vertical-align: middle;
+    cursor: pointer;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    color: inherit;
   }
 
   @include e(caret) {
@@ -63,5 +80,63 @@
     &.is-reverse {
       transform: rotateZ(0deg);
     }
+  }
+
+  @include e(tags) {
+    position: absolute;
+    line-height: normal;
+    white-space: normal;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .el-tag {
+    box-sizing: border-box;
+    border-color: transparent;
+    margin: 2px 0 2px 6px;
+    background-color: #f0f2f5;
+    display: flex;
+    max-width: 100%;
+    align-items: center;
+  }
+
+  @include e(checkbox) {
+    display: block;
+    margin: auto;
+    width: 12px;
+    height: 12px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    position: relative;
+    transition: all .2s cubic-bezier(.075,.82,.165,1);
+
+    @include m(unchecked) {
+      border-color: #e0e0e0;
+      background: #fff;
+    }
+
+    @include m(indeterminate) {
+      border-color: #039be5;
+      background: #039be5;
+    }
+  }
+
+  @include e(checkbox-container) {
+    display: table-cell;
+    width: 20px;
+    min-width: 20px;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  @include e(tip-text) {
+    padding: 0 5px;
+    font-size: 14px;
   }
 }

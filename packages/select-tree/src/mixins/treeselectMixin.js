@@ -353,6 +353,14 @@ export default {
     },
 
     /**
+     * Set tags Size
+     */
+    size: {
+      type: String,
+      default: 'medium'
+    },
+
+    /**
      * Limit the display of selected options.
      * The rest will be hidden within the limitText string.
      */

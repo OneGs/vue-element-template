@@ -89,7 +89,6 @@ export default {
         <div class="el-select-tree__list">
           {instance.forest.normalizedOptions.map((rootNode) => (
             <Option node={rootNode} key={rootNode.id} />
-            // <span>{rootNode.id}</span>
           ))}
         </div>
       );
@@ -124,13 +123,10 @@ export default {
     },
 
     renderNoAvailableOptionsTip() {
-      // const { instance } = this;
+      const { instance } = this;
 
       return (
-        <span>renderNoAvailableOptionsTip</span>
-        // <Tip type="no-options" icon="warning">
-        //   {instance.noOptionsText}
-        // </Tip>
+        <span class="el-select-tree__tip-text">{ instance.noOptionsText }</span>
       );
     },
 
