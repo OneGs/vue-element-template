@@ -3,7 +3,6 @@ import ElSelectMenu from './select-dropdown.vue';
 import ElScrollbar from 'element-ui/packages/scrollbar';
 import Emitter from 'element-ui/src/mixins/emitter';
 import Option from './Option';
-// import Tip from './Tip';
 
 export default {
   name: 'vue-treeselect--menu',
@@ -38,6 +37,13 @@ export default {
     const { instance } = this;
 
     if (instance.menu.isOpen) this.$nextTick(this.onMenuOpen);
+
+    this.$nextTick(() => {
+      const reference = instance.$refs.control.$refs['value-container'].$refs.input;
+      if (reference && reference.$el) {
+        instance.inputWidth = reference.$el.getBoundingClientRect().width;
+      }
+    });
   },
 
   methods: {

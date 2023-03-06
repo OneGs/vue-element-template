@@ -33,10 +33,15 @@ export default {
 
   methods: {
     renderTags() {
+      const { instance } = this;
+
       return (
         this.showTag
           ? (
-            <div class="el-select-tree__tags">
+            <div
+              class="el-select-tree__tags"
+              style={{ 'max-width': instance.inputWidth - 32 + 'px', width: '100%' }}
+            >
               {this.renderMultiTags()}
               {this.renderExceedLimitTip()}
             </div>
