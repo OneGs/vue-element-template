@@ -12,4 +12,56 @@
   @include e(menu) {}
 
   @include e(list) {}
+
+  @include e(list-item) {
+
+  }
+
+  @include e(option) {
+    display: flex;
+    align-items: center;
+    height: 26px;
+    &:hover {
+      background-color: #F5F7FA;
+    }
+
+    @include m(selected){
+        background-color: #F5F7FA;
+    }
+
+    @include m(disabled) {
+      color: #C0C4CC;
+      cursor: not-allowed;
+    }
+  }
+
+  @include e(icon-item) {
+    cursor: pointer;
+    color: #C0C4CC;
+    font-size: 12px;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease-in-out;
+    padding: 6px;
+  }
+
+  @include e(option-arrow--rotated) {
+    transform: rotate(90deg);
+  }
+
+  @include e(label-container) {
+    font-size: 14px;
+    flex: 1;
+  }
+
+  @include e(caret) {
+    color: #C0C4CC;
+    font-size: 14px;
+    transition: transform .3s;
+    transform: rotateZ(180deg);
+    cursor: pointer;
+
+    &.is-reverse {
+      transform: rotateZ(0deg);
+    }
+  }
 }

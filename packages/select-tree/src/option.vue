@@ -1,4 +1,5 @@
 <script>
+import ElCollapseTransition from 'element-ui/src/transitions/collapse-transition';
 import { UNCHECKED, INDETERMINATE, CHECKED } from './constants';
 import { onLeftClick } from './utils';
 
@@ -6,6 +7,9 @@ let arrowPlaceholder, checkMark, minusMark;
 
 const Option = {
   name: 'vue-treeselect--option',
+
+  components: { ElCollapseTransition },
+
   inject: ['instance'],
 
   props: {
@@ -30,21 +34,22 @@ const Option = {
   },
 
   methods: {
-    renderOption() {
+    renderOption(listItemStyles) {
       const { instance, node } = this;
       const optionClass = {
-        'vue-treeselect__option': true,
-        'vue-treeselect__option--disabled': node.isDisabled,
-        'vue-treeselect__option--selected': instance.isSelected(node),
-        'vue-treeselect__option--highlight': node.isHighlighted,
-        'vue-treeselect__option--matched':
+        'el-select-tree__option': true,
+        'el-select-tree__option--disabled': node.isDisabled,
+        'el-select-tree__option--selected': instance.isSelected(node),
+        'el-select-tree__option--highlight': node.isHighlighted,
+        'el-select-tree__option--matched':
           instance.localSearch.active && node.isMatched,
-        'vue-treeselect__option--hide': !this.shouldShow
+        'el-select-tree__option--hide': !this.shouldShow
       };
 
       return (
         <div
           class={optionClass}
+          style={listItemStyles}
           onMouseenter={this.handleMouseEnterOption}
           data-id={node.id}>
           {this.renderArrow()}
@@ -60,7 +65,7 @@ const Option = {
       if (!this.shouldExpand) return null;
 
       return (
-        <div class="vue-treeselect__list">
+        <div class="el-select-tree__list">
           {this.renderSubOptions()}
           {this.renderNoChildrenTip()}
           {this.renderLoadingChildrenTip()}
@@ -75,25 +80,17 @@ const Option = {
       if (instance.shouldFlattenOptions && this.shouldShow) return null;
 
       if (node.isBranch) {
-        const transitionProps = {
-          props: {
-            name: 'vue-treeselect__option-arrow--prepare',
-            appear: true
-          }
+        const arrowClass = {
+          'el-icon-caret-right': true,
+          'el-select-tree__icon-item': true,
+          'el-select-tree__option-arrow--rotated': this.shouldExpand
         };
-
-        // const arrowClass = {
-        //   'vue-treeselect__option-arrow': true,
-        //   'vue-treeselect__option-arrow--rotated': this.shouldExpand
-        // };
 
         return (
           <div
-            class="vue-treeselect__option-arrow-container"
+            class="el-select-tree__option-arrow-container"
             onMousedown={this.handleMouseDownOnArrow}>
-            <transition {...transitionProps}>
-              <i class="el-icon-arrow-left" />
-            </transition>
+            <i class={arrowClass} />
           </div>
         );
       }
@@ -104,7 +101,7 @@ const Option = {
       if (/* node.isLeaf && */ instance.hasBranchNodes) {
         if (!arrowPlaceholder) {
           arrowPlaceholder = (
-            <div class="vue-treeselect__option-arrow-placeholder">&nbsp;</div>
+            <div class="el-select-tree__option-arrow-placeholder">&nbsp;</div>
           );
         }
 
@@ -117,7 +114,7 @@ const Option = {
     renderLabelContainer(children) {
       return (
         <div
-          class="vue-treeselect__label-container"
+          class="el-select-tree__label-container"
           onMousedown={this.handleMouseDownOnLabelContainer}>
           {children}
         </div>
@@ -130,23 +127,23 @@ const Option = {
       if (instance.single) return null;
       if (instance.disableBranchNodes && node.isBranch) return null;
 
-      return <div class="vue-treeselect__checkbox-container">{children}</div>;
+      return <div class="el-select-tree__checkbox-container">{children}</div>;
     },
 
     renderCheckbox() {
       const { instance, node } = this;
       const checkedState = instance.forest.checkedStateMap[node.id];
       const checkboxClass = {
-        'vue-treeselect__checkbox': true,
-        'vue-treeselect__checkbox--checked': checkedState === CHECKED,
-        'vue-treeselect__checkbox--indeterminate':
+        'el-select-tree__checkbox': true,
+        'el-select-tree__checkbox--checked': checkedState === CHECKED,
+        'el-select-tree__checkbox--indeterminate':
           checkedState === INDETERMINATE,
-        'vue-treeselect__checkbox--unchecked': checkedState === UNCHECKED,
-        'vue-treeselect__checkbox--disabled': node.isDisabled
+        'el-select-tree__checkbox--unchecked': checkedState === UNCHECKED,
+        'el-select-tree__checkbox--disabled': node.isDisabled
       };
 
-      if (!checkMark) checkMark = <span class="vue-treeselect__check-mark" />;
-      if (!minusMark) minusMark = <span class="vue-treeselect__minus-mark" />;
+      if (!checkMark) checkMark = <span class="el-select-tree__check-mark" />;
+      if (!minusMark) minusMark = <span class="el-select-tree__minus-mark" />;
 
       return (
         <span class={checkboxClass}>
@@ -170,8 +167,8 @@ const Option = {
           : node.count[instance.showCountOf]
         : NaN;
 
-      const labelClassName = 'vue-treeselect__label';
-      const countClassName = 'vue-treeselect__count';
+      const labelClassName = 'el-select-tree__label';
+      const countClassName = 'el-select-tree__count';
       const customLabelRenderer = instance.$scopedSlots['option-label'];
 
       if (customLabelRenderer) {
@@ -235,7 +232,7 @@ const Option = {
         <span type="error" icon="error">
           {node.childrenStates.loadingError}
           <a
-            class="vue-treeselect__retry"
+            class="el-select-tree__retry"
             title={instance.retryTitle}
             onMousedown={this.handleMouseDownOnRetry}>
             {instance.retryText}
@@ -282,23 +279,20 @@ const Option = {
     const { node } = this;
     const indentLevel = this.instance.shouldFlattenOptions ? 0 : node.level;
     const listItemClass = {
-      'vue-treeselect__list-item': true,
-      [`vue-treeselect__indent-level-${indentLevel}`]: true
+      'el-select-tree__list-item': true,
+      [`el-select-tree__indent-level-${indentLevel}`]: true
     };
-
-    const transitionProps = {
-      props: {
-        name: 'vue-treeselect__list--transition'
-      }
+    const listItemStyles = {
+      paddingLeft: indentLevel * 20 + 'px'
     };
 
     return (
       <div class={listItemClass}>
-        {this.renderOption()}
+        {this.renderOption(listItemStyles)}
         {node.isBranch && (
-          <transition {...transitionProps}>
+          <ElCollapseTransition>
             {this.renderSubOptionsList()}
-          </transition>
+          </ElCollapseTransition>
         )}
       </div>
     );

@@ -1,12 +1,20 @@
-# 这是测试项
+## 树型选择器
 
-自定义关闭按钮为文字或其他符号。
+### 基础用法
 
-:::demo 在 Alert 组件中，你可以设置是否可关闭，关闭按钮的文本以及关闭时的回调函数。`closable`属性决定是否可关闭，接受`boolean`，默认为`true`。你可以设置`close-text`属性来代替右侧的关闭图标，注意：`close-text`必须为文本。设置`close`事件来设置关闭时的回调。
+在select的基础上添加树形选择功能，并提供丰富的操作模式。
+
+:::demo 通过options进行赋值，默认为单选模式。允许在data上设置`isDisabled`为true，禁用选项。通过设置`clearable`为true（默认），开启清空功能。
 ```html
 <template>
         <div>
-            <div style="margin-bottom: 1rem">value: {{ value }}</div>
+            <div style="
+                    margin-bottom: 1rem; 
+                    background-color: #F5F7FA; 
+                    padding: 10px; 
+                    border-radius: 5px ">
+                value: {{ value }}
+            </div>
             <el-select-tree :options="options"  v-model="value" />
         </div>
 </template>
@@ -15,7 +23,7 @@
     export default {
         data() {
             return {
-                value: [],
+                value: null,
                 options: [ {
                     id: 'fruits 1',
                     label: 'Fruits',
@@ -26,15 +34,30 @@
                     }, {
                         id: 'grapes',
                         label: 'Grapes 🍇',
+                        isDisabled: true,
                     }, {
                         id: 'pear',
                         label: 'Pear 🍐',
+                        isDisabled: true,
                     }, {
                         id: 'strawberry',
                         label: 'Strawberry 🍓',
                     }, {
                         id: 'watermelon',
                         label: 'Watermelon 🍉',
+                        children: [ {
+                            id: 'corn1',
+                            label: 'Corn 🌽',
+                        }, {
+                            id: 'carrot1',
+                            label: 'Carrot 🥕',
+                        }, {
+                            id: 'eggplant1',
+                            label: 'Eggplant 🍆',
+                        }, {
+                            id: 'tomato1',
+                            label: 'Tomato 🍅',
+                        } ],
                     } ],
                 }, {
                     id: 'vegetables',

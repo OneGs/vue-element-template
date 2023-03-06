@@ -55,7 +55,7 @@ export default {
             ref="scrollbar">
             <div
               ref="menu"
-              className="vue-treeselect__menu"
+              className="el-select-tree__inner-menu"
               onMouseDown={instance.handleMouseDown}
             >
               {this.renderNormalMenuInner()}
@@ -86,7 +86,7 @@ export default {
       const { instance } = this;
 
       return (
-        <div class="vue-treeselect__list">
+        <div class="el-select-tree__list">
           {instance.forest.normalizedOptions.map((rootNode) => (
             <Option node={rootNode} key={rootNode.id} />
             // <span>{rootNode.id}</span>

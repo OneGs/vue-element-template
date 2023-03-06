@@ -88,9 +88,9 @@ import Empty from '../packages/empty/index.js';
 import Descriptions from '../packages/descriptions/index.js';
 import DescriptionsItem from '../packages/descriptions-item/index.js';
 import Result from '../packages/result/index.js';
+import SelectTree from '../packages/select-tree/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
-import SelectTree from '../packages/select-tree/src/select-tree.vue';
 
 const components = [
   Pagination,
@@ -176,8 +176,8 @@ const components = [
   Descriptions,
   DescriptionsItem,
   Result,
-  CollapseTransition,
-  SelectTree
+  SelectTree,
+  CollapseTransition
 ];
 
 const install = function(Vue, opts = {}) {

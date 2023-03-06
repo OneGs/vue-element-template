@@ -717,7 +717,9 @@ export default {
       },
 
       // <searchQuery, remoteSearchEntry> map.
-      remoteSearch: createMap()
+      remoteSearch: createMap(),
+
+      inputHovering: false
     };
   },
 
@@ -849,8 +851,11 @@ export default {
     },
     shouldFlattenOptions() {
       return this.localSearch.active && this.flattenSearchResults;
-    }
+    },
     /* eslint-enable valid-jsdoc */
+    showClose() {
+      return this.clearable && this.hasValue && this.inputHovering;
+    }
   },
 
   watch: {
