@@ -57,6 +57,20 @@
         }, {
             id: 'watermelon',
             label: 'Watermelon 🍉',
+            children: [{
+                id: 'corn2',
+                label: 'Corn 🌽',
+            }, {
+                id: 'carrot2',
+                label: 'Carrot 🥕',
+                isDisabled: true,
+            }, {
+                id: 'eggplant2',
+                label: 'Eggplant 🍆',
+            }, {
+                id: 'tomato2',
+                label: 'Tomato 🍅',
+            }],
         }],
     }, {
         id: 'vegetables 1',

@@ -1,7 +1,18 @@
 <script>
 import SingleValue from './single-value.vue';
 import MultiValue from './multi-value.vue';
-import {isPromise, onLeftClick} from './utils';
+import {debounce, includes, isPromise, onLeftClick} from './utils';
+import {INPUT_DEBOUNCE_DELAY, KEY_CODES} from './constants';
+
+const keysThatRequireMenuBeingOpen = [
+  KEY_CODES.ENTER,
+  KEY_CODES.END,
+  KEY_CODES.HOME,
+  KEY_CODES.ARROW_LEFT,
+  KEY_CODES.ARROW_UP,
+  KEY_CODES.ARROW_RIGHT,
+  KEY_CODES.ARROW_DOWN
+];
 
 export default {
   name: 'el-select-tree-control',
@@ -35,6 +46,14 @@ export default {
         if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();});
       }
     }
+  },
+
+  created() {
+    this.debouncedCallback = debounce(
+      this.updateSearchQuery,
+      INPUT_DEBOUNCE_DELAY,
+      { leading: true, trailing: true }
+    );
   },
 
   mounted() {
@@ -102,7 +121,129 @@ export default {
       const tagsHeight = tags ? tags.getBoundingClientRect().height || 40 : 0;
       const height = tagsHeight > this.initialInputHeight ? tagsHeight + 6 : tagsHeight;
       inputEle.style.height = Math.max(height, this.initialInputHeight) + 'px';
-    }
+    },
+
+    onKeyDown(evt) {
+      const { instance } = this;
+      // https://css-tricks.com/snippets/javascript/javascript-keycodes/
+      // https://stackoverflow.com/questions/4471582/javascript-keycode-vs-which
+      const key =
+          'which' in evt ? evt.which : /* istanbul ignore next */ evt.keyCode;
+
+      if (evt.ctrlKey || evt.shiftKey || evt.altKey || evt.metaKey) return;
+
+      if (
+        !instance.menu.isOpen &&
+          includes(keysThatRequireMenuBeingOpen, key)
+      ) {
+        evt.preventDefault();
+        return instance.openMenu();
+      }
+
+      switch (key) {
+        case KEY_CODES.BACKSPACE: {
+          if (instance.backspaceRemoves) {
+            instance.removeLastValue();
+          }
+          break;
+        }
+        case KEY_CODES.ENTER: {
+          evt.preventDefault();
+          if (instance.menu.current === null) return;
+          const current = instance.getNode(instance.menu.current);
+          if (current.isBranch && instance.disableBranchNodes) return;
+          instance.select(current);
+          break;
+        }
+        case KEY_CODES.ESCAPE: {
+          if (instance.menu.isOpen) {
+            instance.closeMenu();
+          }
+          break;
+        }
+        case KEY_CODES.END: {
+          evt.preventDefault();
+          instance.highlightLastOption();
+          break;
+        }
+        case KEY_CODES.HOME: {
+          evt.preventDefault();
+          instance.highlightFirstOption();
+          break;
+        }
+        case KEY_CODES.ARROW_LEFT: {
+          const current = instance.getNode(instance.menu.current);
+          if (current.isBranch && instance.shouldExpand(current)) {
+            evt.preventDefault();
+            instance.toggleExpanded(current);
+          } else if (
+            !current.isRootNode &&
+              (current.isLeaf ||
+                  (current.isBranch && !instance.shouldExpand(current)))
+          ) {
+            evt.preventDefault();
+            instance.setCurrentHighlightedOption(current.parentNode);
+          }
+          break;
+        }
+        case KEY_CODES.ARROW_UP: {
+          evt.preventDefault();
+          instance.highlightPrevOption();
+          break;
+        }
+        case KEY_CODES.ARROW_RIGHT: {
+          const current = instance.getNode(instance.menu.current);
+          if (current.isBranch && !instance.shouldExpand(current)) {
+            evt.preventDefault();
+            instance.toggleExpanded(current);
+          }
+          break;
+        }
+        case KEY_CODES.ARROW_DOWN: {
+          evt.preventDefault();
+          instance.highlightNextOption();
+          break;
+        }
+        case KEY_CODES.DELETE: {
+          if (instance.deleteRemoves && !this.value.length) {
+            instance.removeLastValue();
+          }
+          break;
+        }
+        default: {
+          // istanbul ignore else
+          instance.openMenu();
+        }
+      }
+    },
+
+    onFocus() {
+      const { instance } = this;
+
+      instance.trigger.isFocused = true;
+      if (instance.openOnFocus) instance.openMenu();
+    },
+
+    onBlur() {
+      const { instance } = this;
+
+      instance.trigger.isFocused = false;
+    },
+
+    onInput(evt) {
+      const { value } = evt.target;
+
+      this.value = value;
+
+      if (value) {
+        this.debouncedCallback();
+      } else {
+        this.debouncedCallback.cancel();
+        this.updateSearchQuery();
+      }
+    },
+
+    updateSearchQuery() {}
   },
 
   render() {
@@ -120,7 +261,11 @@ export default {
         onMousedown={instance.handleMouseDown}
         onMouseenter={() => setInputHovering(true)}
         onMouseleave={() => setInputHovering(false)}>
-        <ValueContainer ref="value-container">
+        <ValueContainer
+          ref="value-container"
+          nativeOnKeydown={this.onKeyDown}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}>
           { this.showClose && this.renderX()}
           { this.renderArrow() }
         </ValueContainer>

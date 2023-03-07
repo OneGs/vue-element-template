@@ -112,6 +112,7 @@ export default {
         { this.renderTags() }
         <ElInput
           ref="input"
+          { ...{ on: this.$listeners } }
           placeholder={ !instance.hasValue && instance.placeholder }
           disabled={ instance.disabled }
         >

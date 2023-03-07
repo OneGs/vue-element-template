@@ -31,6 +31,7 @@ export default {
         ref="input"
         placeholder={ instance.placeholder }
         disabled={ instance.disabled }
+        { ...{ on: this.$listeners } }
         value={ (shouldShowValue && this.renderSingleValueLabel()) || null }>
         <template slot="suffix">
           { this.$slots.default }

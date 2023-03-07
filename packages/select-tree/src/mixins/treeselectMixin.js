@@ -441,7 +441,7 @@ export default {
      */
     noOptionsText: {
       type: String,
-      default: 'No options available.'
+      default: '无匹配数据'
     },
 
     /**
@@ -1210,17 +1210,6 @@ export default {
       walk({ children: this.forest.normalizedOptions });
     },
 
-    toggleClickOutsideEvent(enabled) {
-      if (enabled) {
-        document.addEventListener('mousedown', this.handleClickOutside, false);
-      } else {
-        document.removeEventListener(
-          'mousedown',
-          this.handleClickOutside,
-          false);
-      }
-    },
-
     getValueContainer() {
       return this.$refs.control.$refs['value-container'];
     },
@@ -1263,12 +1252,9 @@ export default {
       this.resetFlags();
     }),
 
-    handleClickOutside(evt) {
-      // istanbul ignore else
-      if (this.$refs.wrapper && !this.$refs.wrapper.contains(evt.target)) {
-        this.blurInput();
-        this.closeMenu();
-      }
+    handleClickOutside() {
+      this.blurInput();
+      this.closeMenu();
     },
 
     handleLocalSearch() {
@@ -1462,6 +1448,12 @@ export default {
       return $menu && $menu.nodeName !== '#comment' ? $menu : null;
     },
 
+    getScrollWrapper() {
+      const ref = this.appendToBody ? this.$refs.portal.portalTarget : this;
+      const $menu = ref.$refs.menu.$refs.scrollbar.$el.querySelector('.el-scrollbar__wrap');
+      return $menu && $menu.nodeName !== '#comment' ? $menu : null;
+    },
+
     setCurrentHighlightedOption(node, scroll = true) {
       const prev = this.menu.current;
       if (prev != null && prev in this.forest.nodeMap) {
@@ -1473,15 +1465,15 @@ export default {
 
       if (this.menu.isOpen && scroll) {
         const scrollToOption = () => {
-          const $menu = this.getMenu();
+          const $menu = this.getScrollWrapper();
           const $option = $menu.querySelector(
-            `.vue-treeselect__option[data-id="${node.id}"]`);
+            `.el-select-tree__option[data-id="${node.id}"]`);
 
           if ($option) scrollIntoView($menu, $option);
         };
 
         // In case `openMenu()` is just called and the menu is not rendered yet.
-        if (this.getMenu()) {
+        if (this.getScrollWrapper()) {
           scrollToOption();
         } else {
           // istanbul ignore next
@@ -1543,7 +1535,6 @@ export default {
       if (!this.menu.isOpen || (!this.disabled && this.alwaysOpen)) return;
       this.saveMenuScrollPosition();
       this.menu.isOpen = false;
-      // this.toggleClickOutsideEvent(false);
       this.resetSearchQuery();
       this.$emit('close', this.getValue(), this.getInstanceId());
     },
@@ -1554,7 +1545,6 @@ export default {
       this.$nextTick(this.resetHighlightedOptionWhenNecessary);
       this.$nextTick(this.restoreMenuScrollPosition);
       if (!this.options && !this.async) this.loadRootOptions();
-      // this.toggleClickOutsideEvent(true);
       this.$emit('open', this.getInstanceId());
     },
 
@@ -1936,11 +1926,6 @@ export default {
 
       if (this.single && this.closeOnSelect) {
         this.closeMenu();
-
-        // istanbul ignore else
-        if (this.searchable) {
-          this._blurOnSelect = true;
-        }
       }
     },
 
@@ -2077,13 +2062,13 @@ export default {
     },
 
     saveMenuScrollPosition() {
-      const $menu = this.getMenu();
+      const $menu = this.getScrollWrapper();
       // istanbul ignore else
       if ($menu) this.menu.lastScrollPosition = $menu.scrollTop;
     },
 
     restoreMenuScrollPosition() {
-      const $menu = this.getMenu();
+      const $menu = this.getScrollWrapper();
       // istanbul ignore else
       if ($menu) $menu.scrollTop = this.menu.lastScrollPosition;
     }
@@ -2099,10 +2084,5 @@ export default {
     if (!this.options && !this.async && this.autoLoadRootOptions) {this.loadRootOptions();}
     if (this.alwaysOpen) this.openMenu();
     if (this.async && this.defaultOptions) this.handleRemoteSearch();
-  },
-
-  destroyed() {
-    // istanbul ignore next
-    this.toggleClickOutsideEvent(false);
   }
 };

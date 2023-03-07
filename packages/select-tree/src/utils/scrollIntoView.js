@@ -8,7 +8,7 @@ export function scrollIntoView($scrollingEl, $focusedEl) {
     $scrollingEl.scrollTop = Math.min(
       $focusedEl.offsetTop +
         $focusedEl.clientHeight -
-        $scrollingEl.offsetHeight +
+        $scrollingEl.clientHeight +
         overScroll,
       $scrollingEl.scrollHeight);
   } else if (focusedRect.top - overScroll < scrollingReact.top) {

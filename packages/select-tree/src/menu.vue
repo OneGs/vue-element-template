@@ -3,6 +3,7 @@ import ElSelectMenu from './select-dropdown.vue';
 import ElScrollbar from 'element-ui/packages/scrollbar';
 import Emitter from 'element-ui/src/mixins/emitter';
 import Option from './Option';
+import {onLeftClick} from './utils';
 
 export default {
   name: 'vue-treeselect--menu',
@@ -40,13 +41,25 @@ export default {
   },
 
   methods: {
+    handleMouseDown: onLeftClick(function handleMouseDown(evt) {
+      const { instance } = this;
+
+      evt.preventDefault();
+      evt.stopPropagation();
+      instance.focusInput();
+    }),
+
     renderMenu() {
       const { instance } = this;
 
       if (!instance.menu.isOpen) return null;
 
       return (
-        <el-select-menu visibleArrow={true} appendToBody={false}>
+        <el-select-menu
+          visibleArrow={true}
+          appendToBody={false}
+          nativeOnMousedown={this.handleMouseDown}
+        >
           <el-scrollbar
             tag="ul"
             wrap-class="el-select-dropdown__wrap"
@@ -98,9 +111,7 @@ export default {
 
       return (
         <span>loading</span>
-        // <Tip type="loading" icon="loader">
-        //   {instance.loadingText}
-        // </Tip>
+
       );
     },
 
@@ -109,15 +120,7 @@ export default {
 
       return (
         <span>error</span>
-        // <Tip type="error" icon="error">
-        //   {instance.rootOptionsStates.loadingError}
-        //   <a
-        //     class="vue-treeselect__retry"
-        //     onClick={instance.loadRootOptions}
-        //     title={instance.retryTitle}>
-        //     {instance.retryText}
-        //   </a>
-        // </Tip>
+
       );
     },
 

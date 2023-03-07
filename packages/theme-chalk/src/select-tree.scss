@@ -29,6 +29,10 @@
         background-color: #F5F7FA;
     }
 
+    @include m(highlight) {
+      background-color: #F5F7FA;
+    }
+
     @include m(disabled) {
       color: #C0C4CC;
       cursor: not-allowed;
@@ -136,7 +140,12 @@
   }
 
   @include e(tip-text) {
-    padding: 0 5px;
+    padding: 10px 0;
+    margin: 0;
+    text-align: center;
+    color: #999;
     font-size: 14px;
+    display: inline-block;
+    width: 100%;
   }
 }

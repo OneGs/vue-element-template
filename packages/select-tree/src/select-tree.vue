@@ -23,7 +23,7 @@ export default {
 
   render() {
     const directives = [
-      { name: 'Clickoutside', value: this.closeMenu }
+      { name: 'Clickoutside', value: this.handleClickOutside }
     ];
 
     return (
