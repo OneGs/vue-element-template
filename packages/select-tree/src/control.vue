@@ -8,6 +8,53 @@ export default {
 
   inject: ['instance'],
 
+  data() {
+    return {
+      inputHovering: false,
+      initialInputHeight: 0
+    };
+  },
+
+  computed: {
+    showClose() {
+      const { instance } = this;
+
+      return instance.clearable && instance.hasValue && this.inputHovering;
+    }
+  },
+
+  watch: {
+    'instance.forest.selectedNodeIds.length': {
+      handler() {
+        if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();});
+      }
+    },
+
+    'instance.valueConsistsOf': {
+      handler() {
+        if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();});
+      }
+    }
+  },
+
+  mounted() {
+    const { instance } = this;
+
+    this.$nextTick(() => {
+      const reference = this.$refs['value-container'].$refs.input;
+
+      // init Width
+      if (reference && reference.$el) {
+        instance.inputWidth = reference.$el.getBoundingClientRect().width;
+      }
+
+      // init Height
+      const input = reference.$el.querySelector('input');
+      this.initialInputHeight = input.getBoundingClientRect().height || 40;
+      this.resetInputHeight();
+    });
+  },
+
   methods: {
     handleMouseDownOnX: onLeftClick(function handleMouseDownOnX(evt) {
       evt.stopPropagation();
@@ -43,13 +90,24 @@ export default {
         'is-reverse': instance.menu.isOpen
       };
 
-      return <i v-show={!instance.showClose} class={expandClasses} />;
+      return <i v-show={!this.showClose} class={expandClasses} />;
+    },
+
+    resetInputHeight() {
+      const input = this.$refs['value-container'].$refs.input;
+      if (!input) return;
+      const inputEle = input.$el.querySelector('input');
+
+      const tags = this.$refs['value-container'].$refs.tags;
+      const tagsHeight = tags ? tags.getBoundingClientRect().height || 40 : 0;
+      const height = tagsHeight > this.initialInputHeight ? tagsHeight + 6 : tagsHeight;
+      inputEle.style.height = Math.max(height, this.initialInputHeight) + 'px';
     }
   },
 
   render() {
     const setInputHovering = (status) => {
-      instance.inputHovering = status;
+      this.inputHovering = status;
     };
 
     const { instance } = this;
@@ -62,8 +120,8 @@ export default {
         onMousedown={instance.handleMouseDown}
         onMouseenter={() => setInputHovering(true)}
         onMouseleave={() => setInputHovering(false)}>
-        <ValueContainer ref="value-container" >
-          { instance.showClose && this.renderX()}
+        <ValueContainer ref="value-container">
+          { this.showClose && this.renderX()}
           { this.renderArrow() }
         </ValueContainer>
       </div>

@@ -29,7 +29,7 @@
                 :disabled="checked === 'DISABLED'"
                 :disable-branch-nodes="checked === 'DISABLED_BRANCH_NODES'"
                 :branch-nodes-first="checked === 'BRANCH_NODES_FIRST'"
-                :limit="checked === 'LIMIT TWO' ? 2 : null"
+                :limit="checked === 'LIMIT TWO' ? 2 : Infinity"
                 :show-count="checked === 'SHOW_COUNT'"
         />
     </div>

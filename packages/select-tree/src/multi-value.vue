@@ -39,6 +39,7 @@ export default {
         this.showTag
           ? (
             <div
+              ref="tags"
               class="el-select-tree__tags"
               style={{ 'max-width': instance.inputWidth - 32 + 'px', width: '100%' }}
             >

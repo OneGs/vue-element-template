@@ -37,13 +37,6 @@ export default {
     const { instance } = this;
 
     if (instance.menu.isOpen) this.$nextTick(this.onMenuOpen);
-
-    this.$nextTick(() => {
-      const reference = instance.$refs.control.$refs['value-container'].$refs.input;
-      if (reference && reference.$el) {
-        instance.inputWidth = reference.$el.getBoundingClientRect().width;
-      }
-    });
   },
 
   methods: {

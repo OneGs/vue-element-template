@@ -727,7 +727,7 @@ export default {
       // <searchQuery, remoteSearchEntry> map.
       remoteSearch: createMap(),
 
-      inputHovering: false
+      inputWidth: 0
     };
   },
 
@@ -859,11 +859,8 @@ export default {
     },
     shouldFlattenOptions() {
       return this.localSearch.active && this.flattenSearchResults;
-    },
-    /* eslint-enable valid-jsdoc */
-    showClose() {
-      return this.clearable && this.hasValue && this.inputHovering;
     }
+    /* eslint-enable valid-jsdoc */
   },
 
   watch: {
