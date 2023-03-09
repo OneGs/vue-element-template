@@ -61,22 +61,37 @@
     watch: {
       '$parent.inputWidth'() {
         this.minWidth = this.getInputComponent().$el.getBoundingClientRect().width + 'px';
+      },
+
+      'instance.multiple': {
+        handler() {
+          this.updatesReferenceElm();
+        }
       }
     },
 
     methods: {
       getInputComponent() {
-        return this.$parent.$parent.$refs.control.$refs['value-container'];
+        const { instance } = this;
+
+        return instance.$refs.control.$refs['value-container'];
+      },
+
+      updatesReferenceElm() {
+        this.doDestroy(true);
       }
     },
 
     mounted() {
       const { instance } = this;
-      this.referenceElm = this.getInputComponent().$el;
-      this.$parent.popperElm = this.popperElm = this.$el;
-      this.minWidth = this.getInputComponent().$el.getBoundingClientRect().width + 'px';
+      this.popperElm = this.$el;
 
-      this.$on('updatePopper', () => instance.menu.isOpen && this.updatePopper());
+      this.$on('updatePopper', () => {
+        this.referenceElm = this.getInputComponent().$el;
+        this.minWidth = this.referenceElm.getBoundingClientRect().width + 'px';
+        instance.menu.isOpen && this.updatePopper();
+      });
+
       this.$on('destroyPopper', this.destroyPopper);
     }
   };
