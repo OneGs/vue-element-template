@@ -42,6 +42,10 @@
       color: #C0C4CC;
       cursor: not-allowed;
     }
+
+    @include m(hide) {
+      display: none;
+    }
   }
 
   @include e(icon-item) {

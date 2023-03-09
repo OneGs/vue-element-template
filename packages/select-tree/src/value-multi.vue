@@ -1,11 +1,11 @@
 <script>
-import IInput from './input.vue';
+import Input from './input.vue';
 import ElTag from 'element-ui/packages/tag';
 
 export default {
   name: 'vue-treeselect--multi-value',
 
-  components: { ElTag, IInput},
+  components: { ElTag, Input},
 
   inject: ['instance'],
 
@@ -87,16 +87,6 @@ export default {
       );
     },
 
-    renderSingleValueLabel() {
-      const { instance } = this;
-      const node = instance.selectedNodes[0];
-
-      const customValueLabelRenderer = instance.$scopedSlots['value-label'];
-      return customValueLabelRenderer
-        ? customValueLabelRenderer({ node })
-        : node.label;
-    },
-
     deleteNode(node) {
       const { instance } = this;
 
@@ -110,9 +100,9 @@ export default {
     return (
       <div class="el-select-tree__value-multi">
         { this.renderTags() }
-        <IInput ref="input">
+        <Input ref="input">
           { this.$slots.default }
-        </IInput>
+        </Input>
       </div>
     );
   }

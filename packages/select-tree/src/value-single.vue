@@ -1,5 +1,5 @@
 <script>
-import IInput from './input.vue';
+import Input from './input.vue';
 
 export default {
   name: 'vue-treeselect--single-value',
@@ -7,14 +7,14 @@ export default {
   inject: ['instance'],
 
   components: {
-    IInput
+    Input
   },
 
   render() {
     return (
-      <IInput ref="input">
+      <Input ref="input">
         { this.$slots.default }
-      </IInput>
+      </Input>
     );
   }
 };

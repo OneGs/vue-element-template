@@ -22,6 +22,14 @@ export default {
     ElInput
   },
 
+  data() {
+    return {
+      initialInputHeight: 0,
+      currentPlaceholder: null,
+      selectedLabel: null
+    };
+  },
+
   computed: {
     shouldShowValue() {
       const { instance } = this;
@@ -32,14 +40,8 @@ export default {
     readonly() {
       const { instance } = this;
 
-      return !instance.filterable;
+      return !instance.menu.isOpen;
     }
-  },
-
-  data() {
-    return {
-      initialInputHeight: 0
-    };
   },
 
   watch: {
@@ -49,9 +51,37 @@ export default {
       }
     },
 
+    'instance.forest.selectedNodeIds': {
+      handler(val) {
+        const { instance } = this;
+
+        if (!val.length) this.currentPlaceholder = instance.placeholder;
+        this.selectedLabel = (this.shouldShowValue && this.renderSingleValueLabel()) || null;
+      }
+    },
+
     'instance.valueConsistsOf': {
       handler() {
         if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();});
+      }
+    },
+
+    'instance.menu.isOpen': {
+      handler(val) {
+        const { instance } = this;
+
+        if (val) {
+          this.currentPlaceholder = this.selectedLabel || instance.placeholder;
+          this.selectedLabel = null;
+        } else {
+          if (this.getSelectedLabel()) {
+            this.selectedLabel = this.getSelectedLabel();
+            this.currentPlaceholder = null;
+          } else {
+            this.currentPlaceholder = instance.placeholder;
+            this.selectedLabel = null;
+          }
+        }
       }
     }
   },
@@ -139,7 +169,7 @@ export default {
           break;
         }
         case KEY_CODES.DELETE: {
-          if (instance.deleteRemoves && !this.value.length) {
+          if (instance.deleteRemoves && !this.selectedLabel) {
             instance.removeLastValue();
           }
           break;
@@ -164,16 +194,12 @@ export default {
       instance.trigger.isFocused = false;
     },
 
-    onInput(evt) {
-      const { value } = evt.target;
-
-      this.value = value;
-
-      if (value) {
-        this.debouncedCallback();
+    onInput(searchQuery) {
+      this.selectedLabel = searchQuery;
+      if (searchQuery) {
+        this.debouncedCallback(searchQuery);
       } else {
-        this.debouncedCallback.cancel();
-        this.updateSearchQuery();
+        this.updateSearchQuery(searchQuery);
       }
     },
 
@@ -188,7 +214,10 @@ export default {
       inputEle.style.height = Math.max(height, this.initialInputHeight) + 'px';
     },
 
-    updateSearchQuery() {},
+    updateSearchQuery(searchQuery) {
+      const { instance } = this;
+      instance.trigger.searchQuery = searchQuery;
+    },
 
     renderSingleValueLabel() {
       const { instance } = this;
@@ -198,14 +227,24 @@ export default {
       return customValueLabelRenderer
         ? customValueLabelRenderer({ node })
         : node.label;
+    },
+
+    getSelectedLabel() {
+      const { instance } = this;
+      if (instance.multiple) return;
+
+      return (this.shouldShowValue && this.renderSingleValueLabel()) || null;
     }
   },
 
   created() {
+    const { instance } = this;
+    this.currentPlaceholder = instance.placeholder;
+    this.selectedLabel = this.getSelectedLabel();
+
     this.debouncedCallback = debounce(
-      this.updateSearchQuery,
       INPUT_DEBOUNCE_DELAY,
-      { leading: true, trailing: true }
+      (val) => this.updateSearchQuery(val)
     );
   },
 
@@ -233,13 +272,16 @@ export default {
     return (
       <ElInput
         ref="input"
-        placeholder={ instance.placeholder }
+        type="text"
+        placeholder={ this.currentPlaceholder }
         disabled={ instance.disabled }
         nativeOnKeydown={this.onKeyDown}
+        readonly={this.readonly}
+        onInput={this.onInput}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
-        readonly={this.readonly}
-        value={ (this.shouldShowValue && this.renderSingleValueLabel()) || null }>
+        validate-event={false}
+        value={ this.selectedLabel }>
         <template slot="suffix">
           { this.$slots.default }
         </template>

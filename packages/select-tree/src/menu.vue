@@ -58,11 +58,57 @@ export default {
               className="el-select-tree__inner-menu"
               onMouseDown={instance.handleMouseDown}
             >
-              {this.renderNormalMenuInner()}
+              {instance.async
+                ? this.renderAsyncSearchMenuInner()
+                : instance.localSearch.active
+                  ? this.renderLocalSearchMenuInner()
+                  : this.renderNormalMenuInner()}
             </div>
           </el-scrollbar>
         </el-select-menu>
       );
+    },
+
+    renderAsyncSearchMenuInner() {
+      const { instance } = this;
+      const entry = instance.getRemoteSearchEntry();
+      const shouldShowSearchPromptTip =
+          instance.trigger.searchQuery === '' && !instance.defaultOptions;
+
+      const shouldShowNoResultsTip = shouldShowSearchPromptTip
+        ? false
+        : entry.isLoaded && entry.options.length === 0;
+
+      if (shouldShowSearchPromptTip) {
+        return this.renderSearchPromptTip();
+      } else if (entry.isLoading) {
+        return this.renderLoadingOptionsTip();
+      } else if (entry.loadingError) {
+        return this.renderAsyncSearchLoadingErrorTip();
+      } else if (shouldShowNoResultsTip) {
+        return this.renderNoResultsTip();
+      } else {
+        return this.renderOptionList();
+      }
+    },
+
+    renderLocalSearchMenuInner() {
+      const { instance } = this;
+
+      if (instance.rootOptionsStates.isLoading) {
+        return this.renderLoadingOptionsTip();
+      } else if (instance.rootOptionsStates.loadingError) {
+        return this.renderLoadingRootOptionsErrorTip();
+      } else if (
+        instance.rootOptionsStates.isLoaded &&
+          instance.forest.normalizedOptions.length === 0
+      ) {
+        return this.renderNoAvailableOptionsTip();
+      } else if (instance.localSearch.noResults) {
+        return this.renderNoResultsTip();
+      } else {
+        return this.renderOptionList();
+      }
     },
 
     renderNormalMenuInner() {
@@ -94,15 +140,51 @@ export default {
       );
     },
 
-    renderLoadingOptionsTip() {
+    renderNoResultsTip() {
+      const { instance } = this;
+
       return (
-        <span>loading</span>
+        <span class="el-select-tree__tip-text">
+          {instance.noResultsText}
+        </span>
+      );
+    },
+
+    renderSearchPromptTip() {
+      const { instance } = this;
+
+      return (
+        <span class="el-select-tree__tip-text">
+          {instance.searchPromptText}
+        </span>
+      );
+    },
+
+    renderAsyncSearchLoadingErrorTip() {
+      const { instance } = this;
+      return (
+        <span class="el-select-tree__tip-text">
+          {instance.retryText}
+        </span>
+      );
+    },
+
+    renderLoadingOptionsTip() {
+      const { instance } = this;
+      return (
+        <span className="el-select-tree__tip-text">
+          {instance.loadingText}
+        </span>
       );
     },
 
     renderLoadingRootOptionsErrorTip() {
+      const { instance } = this;
+
       return (
-        <span>error</span>
+        <span className="el-select-tree__tip-text">
+          {instance.errorText}
+        </span>
       );
     },
 
@@ -122,12 +204,6 @@ export default {
 
     onMenuClose() {
       this.broadcast('ElSelectDropdown', 'destroyPopper');
-    },
-
-    handleMousedownEnterOption() {
-      const { instance } = this;
-
-      this.$nextTick(() => instance.focusInput());
     }
   },
 
@@ -136,7 +212,6 @@ export default {
       <div
         ref="menu-container"
         class="el-select-tree__menu"
-        onMousedown={this.handleMousedownEnterOption}
       >
         <transition name="el-zoom-in-top">
           {this.renderMenu()}

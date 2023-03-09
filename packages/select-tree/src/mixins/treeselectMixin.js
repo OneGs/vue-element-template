@@ -1535,8 +1535,8 @@ export default {
       if (!this.menu.isOpen || (!this.disabled && this.alwaysOpen)) return;
       this.saveMenuScrollPosition();
       this.menu.isOpen = false;
-      this.resetSearchQuery();
       this.$emit('close', this.getValue(), this.getInstanceId());
+      setTimeout(() => this.resetSearchQuery(), 100);
     },
 
     openMenu() {
