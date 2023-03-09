@@ -1,11 +1,11 @@
 <script>
-import ElInput from 'element-ui/packages/input';
+import IInput from './input.vue';
 import ElTag from 'element-ui/packages/tag';
 
 export default {
   name: 'vue-treeselect--multi-value',
 
-  components: { ElTag, ElInput},
+  components: { ElTag, IInput},
 
   inject: ['instance'],
 
@@ -105,21 +105,14 @@ export default {
   },
 
   render() {
-    const { instance } = this;
+    // const { instance } = this;
 
     return (
-      <div>
+      <div class="el-select-tree__value-multi">
         { this.renderTags() }
-        <ElInput
-          ref="input"
-          { ...{ on: this.$listeners } }
-          placeholder={ !instance.hasValue && instance.placeholder }
-          disabled={ instance.disabled }
-        >
-          <template slot="suffix">
-            { this.$slots.default }
-          </template>
-        </ElInput>
+        <IInput ref="input">
+          { this.$slots.default }
+        </IInput>
       </div>
     );
   }

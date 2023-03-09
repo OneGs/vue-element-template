@@ -7,6 +7,10 @@
   background: $--color-white;
   color: $--tree-font-color;
 
+  .el-input__inner {
+    cursor: pointer;
+  }
+
   @include e(control) {}
 
   @include e(menu) {}

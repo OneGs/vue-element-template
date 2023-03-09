@@ -1215,7 +1215,7 @@ export default {
     },
 
     getInput() {
-      return this.getValueContainer().$refs.input;
+      return this.getValueContainer().$refs.input.$refs.input;
     },
 
     focusInput() {
