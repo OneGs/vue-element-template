@@ -15,6 +15,17 @@ let seed = 0;
 
 function createDocumentHandler(el, binding, vnode) {
   return function(mouseup = {}, mousedown = {}) {
+    // console.log(!vnode,
+    //   !vnode.context,
+    //   !mouseup.target,
+    //   !mousedown.target,
+    //   el, mousedown.target,
+    //   el.contains(mouseup.target),
+    //   el.contains(mousedown.target),
+    //   el === mouseup.target,
+    //   (vnode.context.popperElm &&
+    //         (vnode.context.popperElm.contains(mouseup.target) ||
+    //             vnode.context.popperElm.contains(mousedown.target))));
     if (!vnode ||
       !vnode.context ||
       !mouseup.target ||

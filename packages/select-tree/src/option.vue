@@ -140,6 +140,8 @@ const Option = {
           disabled={ node.isDisabled }
           value={ checkedState === CHECKED }
           indeterminate={ checkedState === INDETERMINATE }
+          nativeOnMousedown={ (evt) => evt.preventDefault() }
+          nativeOnClick={(evt) => evt.preventDefault()}
         />
       );
     },

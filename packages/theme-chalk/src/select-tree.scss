@@ -20,13 +20,14 @@
   @include e(option) {
     display: flex;
     align-items: center;
-    height: 26px;
+    height: 32px;
     &:hover {
       background-color: #F5F7FA;
     }
 
     @include m(selected){
-        background-color: #F5F7FA;
+      color: #409EFF;
+      font-weight: bold;
     }
 
     @include m(highlight) {

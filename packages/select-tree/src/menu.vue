@@ -3,7 +3,6 @@ import ElSelectMenu from './select-dropdown.vue';
 import ElScrollbar from 'element-ui/packages/scrollbar';
 import Emitter from 'element-ui/src/mixins/emitter';
 import Option from './Option';
-import {onLeftClick} from './utils';
 
 export default {
   name: 'vue-treeselect--menu',
@@ -41,24 +40,13 @@ export default {
   },
 
   methods: {
-    handleMouseDown: onLeftClick(function handleMouseDown(evt) {
-      const { instance } = this;
-
-      evt.preventDefault();
-      evt.stopPropagation();
-      instance.focusInput();
-    }),
-
     renderMenu() {
       const { instance } = this;
 
-      if (!instance.menu.isOpen) return null;
-
       return (
         <el-select-menu
-          visibleArrow={true}
+          v-show={instance.menu.isOpen}
           appendToBody={false}
-          nativeOnMousedown={this.handleMouseDown}
         >
           <el-scrollbar
             tag="ul"
@@ -107,20 +95,14 @@ export default {
     },
 
     renderLoadingOptionsTip() {
-      // const { instance } = this;
-
       return (
         <span>loading</span>
-
       );
     },
 
     renderLoadingRootOptionsErrorTip() {
-      // const { instance } = this;
-
       return (
         <span>error</span>
-
       );
     },
 
@@ -128,7 +110,9 @@ export default {
       const { instance } = this;
 
       return (
-        <span class="el-select-tree__tip-text">{ instance.noOptionsText }</span>
+        <span class="el-select-tree__tip-text">
+          { instance.noOptionsText }
+        </span>
       );
     },
 
@@ -138,6 +122,12 @@ export default {
 
     onMenuClose() {
       this.broadcast('ElSelectDropdown', 'destroyPopper');
+    },
+
+    handleMousedownEnterOption() {
+      const { instance } = this;
+
+      this.$nextTick(() => instance.focusInput());
     }
   },
 
@@ -146,6 +136,7 @@ export default {
       <div
         ref="menu-container"
         class="el-select-tree__menu"
+        onMousedown={this.handleMousedownEnterOption}
       >
         <transition name="el-zoom-in-top">
           {this.renderMenu()}

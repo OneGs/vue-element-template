@@ -10,6 +10,14 @@ export default {
     ElInput
   },
 
+  computed: {
+    readonly() {
+      const { instance } = this;
+
+      return !instance.filterable;
+    }
+  },
+
   methods: {
     renderSingleValueLabel() {
       const { instance } = this;
@@ -32,6 +40,7 @@ export default {
         placeholder={ instance.placeholder }
         disabled={ instance.disabled }
         { ...{ on: this.$listeners } }
+        readonly={this.readonly}
         value={ (shouldShowValue && this.renderSingleValueLabel()) || null }>
         <template slot="suffix">
           { this.$slots.default }
