@@ -17,10 +17,22 @@
                     border-radius: 5px">
             value: {{ value }}
         </div>
-        <el-radio-group v-model="checked" style="padding: 1rem 0">
-            <el-radio v-for="check in checkedOptions" :key="check" :label="check">{{ check }}</el-radio>
+        <el-radio-group 
+                v-model="checked" 
+                style="padding: 1rem 0" 
+                v-for="index in checkedOptionsLen"
+                :key="index"
+        >
+            <template v-for="jndex in 3" >
+                <el-radio
+                        v-if="checkedOptionsKeys[(index - 1) * 3 + (jndex - 1)]"
+                        :key="checkedOptionsKeys[(index - 1) * 3 + (jndex -1)]"
+                        :label="checkedOptionsKeys[(index - 1) * 3 + (jndex -1)]">
+                    {{ checkedOptionsValues[(index - 1) * 3 + (jndex -1)] }}
+                </el-radio>
+            </template>
         </el-radio-group>
-        <el-select-tree
+        <el-select-tree 
                 :options="options"
                 v-model="value"
                 :multiple="showMultiple"
@@ -31,6 +43,14 @@
                 :branch-nodes-first="checked === 'BRANCH_NODES_FIRST'"
                 :limit="checked === 'LIMIT TWO' ? 2 : Infinity"
                 :show-count="checked === 'SHOW_COUNT'"
+                :searchable="checked !== 'NO_SEARCHABLE'"
+                :backspace-removes="checked !== 'BACK_SPACE_REMOVES'"
+                :clearable="checked !== 'CLEARABLE'"
+                :clear-on-select="checked === 'CLEAR_ON_SELECT'"
+                :close-on-select="checked === 'CLOSE_ON_SELECT'"
+                :flatten-search-results="checked === 'FLATTEN_SEARCH_RESULT'"
+                :disable-fuzzy-matching="checked === 'DISABLED_FUZZY_MATCHING'"
+                :search-nested="checked === 'SEARCH_NESTED'"
         />
     </div>
 </template>
@@ -41,7 +61,7 @@
         label: 'Fruits',
         children: [{
             id: 'apple',
-            label: 'Apple 🍎',
+            label: 'This  Apple 🍎',
             isNew: true,
         }, {
             id: 'grapes',
@@ -77,7 +97,7 @@
         label: 'Vegetables',
         children: [{
             id: 'corn',
-            label: 'Corn 🌽',
+            label: 'This Corn 🌽',
         }, {
             id: 'carrot',
             label: 'Carrot 🥕',
@@ -92,9 +112,49 @@
     }]
 
     export default {
+        data() {
+            return {
+                value: 'fruits 1',
+                checked: null,
+                checkedOptions: {
+                    'DISABLED': '禁用操作',
+                    'DISABLED_BRANCH_NODES': '禁用分支选项',
+                    'ALWAYS_OPEN': '保持打开菜单',
+                    'BRANCH_NODES_FIRST': '在叶节点之前显示分支节点',
+                    'FLAT': '平铺模式（同联合模式相对）',
+                    'LIMIT TWO': '限制显示长度模式为2（仅多选模式）',
+                    'NO_OPTIONS': '不存在Options值时',
+                    'SHOW_COUNT': '分支节点显示数量统计',
+                    'CLEAR_ON_SELECT': '选择选项后是否清除搜索输入（仅多选模式）',
+                    'NO_SEARCHABLE': '禁用搜索（默认开启）',
+                    'BACK_SPACE_REMOVES': '没有输入时，不允许删除最后一项（默认允许）',
+                    'CLEARABLE': '是否显示重置值的“×”按钮（默认显示）',
+                    // 'CLOSE_ON_SELECT': '单选模式下，选择后可不关闭menu',
+                    'FLATTEN_SEARCH_RESULT': '搜索时是否展平树（仅同步搜索模式）',
+                    'DISABLED_FUZZY_MATCHING': '设置为true 禁用默认情况下启用的模糊匹配功能。',
+                    'SEARCH_NESTED': '巢状搜索'
+                },
+                options: OPTIONS
+            }
+        },
+
         computed: {
             showMultiple() {
-                return ['FLAT', 'LIMIT TWO'].includes(this.checked)
+                return ['FLAT', 'LIMIT TWO', 'CLEAR_ON_SELECT'].includes(this.checked)
+            },
+
+            checkedOptionsKeys() {
+                return Object.keys(this.checkedOptions)
+            },
+
+            checkedOptionsValues() {
+                return Object.values(this.checkedOptions)
+            },
+
+            checkedOptionsLen() {
+                const len = Math.floor(this.checkedOptionsKeys.length / 3)
+                const isMode = this.checkedOptionsKeys.length % 3 === 0
+                return !isMode ? len + 1 : len
             }
         },
 
@@ -106,24 +166,6 @@
                 }
             }
         },
-
-        data() {
-            return {
-                value: null,
-                checked: null,
-                checkedOptions: [
-                    'DISABLED',
-                    'DISABLED_BRANCH_NODES',
-                    'ALWAYS_OPEN',
-                    'BRANCH_NODES_FIRST',
-                    'FLAT',
-                    'LIMIT TWO',
-                    'NO_OPTIONS',
-                    'SHOW_COUNT'
-                ],
-                options: OPTIONS
-            }
-        }
     }
 </script>
 ```

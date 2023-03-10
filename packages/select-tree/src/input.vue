@@ -34,26 +34,13 @@ export default {
     readonly() {
       const { instance } = this;
 
-      return !instance.menu.isOpen || instance.multiple;
-    }
-  },
-
-  watch: {
-    'instance.forest.selectedNodeIds.length': {
-      handler() {
-        if (this.instance.multiple) {this.$nextTick(() => {this.resetInputHeight();});}
-      }
-    },
-
-    'instance.valueConsistsOf': {
-      handler() {
-        if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();});
-      }
+      return !instance.searchable || !instance.menu.isOpen || instance.multiple;
     }
   },
 
   methods: {
     onKeyDown(evt) {
+      console.log('zhi');
       const { instance } = this;
       // https://css-tricks.com/snippets/javascript/javascript-keycodes/
       // https://stackoverflow.com/questions/4471582/javascript-keycode-vs-which
@@ -77,6 +64,12 @@ export default {
           }
           break;
         }
+        case KEY_CODES.TAB: {
+          if (instance.menu.isOpen) {
+            instance.closeMenu();
+          }
+          break;
+        }
         case KEY_CODES.ENTER: {
           evt.preventDefault();
           if (instance.menu.current === null) return;
@@ -86,7 +79,9 @@ export default {
           break;
         }
         case KEY_CODES.ESCAPE: {
-          if (instance.menu.isOpen) {
+          if (this.selectedLabel && this.selectedLabel.length) {
+            this.clear();
+          } else if (instance.menu.isOpen) {
             instance.closeMenu();
           }
           break;
@@ -189,6 +184,19 @@ export default {
         this.selectedLabel = value;
         this.currentPlaceholder = placeholder;
       }
+    },
+
+    watchValue2ResetHeight() {
+      const needWatch = [
+        'instance.forest.selectedNodeIds.length',
+        'instance.valueConsistsOf',
+        'instance.flat'
+      ];
+      const handler = () => { if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();}); };
+
+      needWatch.map((watch) => {
+        this.$watch(watch, handler);
+      });
     }
   },
 
@@ -200,6 +208,8 @@ export default {
       INPUT_DEBOUNCE_DELAY,
       (val) => this.updateSearchQuery(val)
     );
+
+    this.watchValue2ResetHeight();
   },
 
   mounted() {

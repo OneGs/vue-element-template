@@ -13,16 +13,6 @@ export default {
 
   components: {ElSelectMenu, ElScrollbar, Option},
 
-  computed: {
-    menuStyle() {
-      const { instance } = this;
-
-      return {
-        maxHeight: instance.maxHeight + 'px'
-      };
-    }
-  },
-
   watch: {
     'instance.menu.isOpen'(newValue) {
       if (newValue) {

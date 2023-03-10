@@ -45,7 +45,7 @@ export default {
     readonly() {
       const { instance } = this;
 
-      return !instance.menu.isOpen;
+      return !instance.searchable || !instance.menu.isOpen;
     }
   },
 
@@ -67,6 +67,18 @@ export default {
     'selectedLabel': {
       handler() {
         this.setInputValue();
+      }
+    },
+
+    /**
+     * Title for the "×" button when `multiple: true`.
+     */
+    'instance.trigger.searchQuery': {
+      handler(searchQuery) {
+        if (searchQuery) return;
+
+        const { instance } = this;
+        instance.clearAllText && (this.selectedLabel = null);
       }
     }
   },

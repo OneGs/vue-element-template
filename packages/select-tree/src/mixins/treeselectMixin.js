@@ -1104,7 +1104,8 @@ export default {
           const node = this.getNode(nodeId);
           if (node.isBranch) {
             this.traverseDescendantsBFS(node, (descendant) => {
-              nextSelectedNodeIds.push(descendant.id);
+              // fix change flat to limit when has selected value. disabled will be selected
+              !descendant.isDisabled && nextSelectedNodeIds.push(descendant.id);
             });
           }
         });

@@ -50,6 +50,12 @@
     @include m(hide) {
       display: none;
     }
+
+    @include m(matched) {
+      &.is-flat-result {
+        padding: 0 15px !important;
+      }
+    }
   }
 
   @include e(icon-item) {

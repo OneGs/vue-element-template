@@ -43,6 +43,7 @@ export const INDEX = 'INDEX';
 // Key codes look-up table.
 export const KEY_CODES = {
   BACKSPACE: 8,
+  TAB: 9,
   ENTER: 13,
   ESCAPE: 27,
   END: 35,

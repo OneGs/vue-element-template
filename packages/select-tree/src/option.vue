@@ -44,6 +44,7 @@ const Option = {
         'el-select-tree__option--highlight': node.isHighlighted,
         'el-select-tree__option--matched':
           instance.localSearch.active && node.isMatched,
+        'is-flat-result': instance.flattenSearchResults,
         'el-select-tree__option--hide': !this.shouldShow
       };
 
