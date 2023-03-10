@@ -162,11 +162,7 @@ export default {
 
     onInput(searchQuery) {
       this.selectedLabel = searchQuery;
-      if (searchQuery) {
-        this.debouncedCallback(searchQuery);
-      } else {
-        this.updateSearchQuery(searchQuery);
-      }
+      this.debouncedCallback(searchQuery);
     },
 
     resetInputHeight() {
@@ -226,6 +222,9 @@ export default {
 
   render() {
     const { instance } = this;
+    const classes = {
+      'is-focus': instance.trigger.isFocused
+    };
 
     return (
       <ElInput
@@ -239,7 +238,8 @@ export default {
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         validate-event={false}
-        value={ this.selectedLabel }>
+        value={ this.selectedLabel }
+        class={classes}>
         <template slot="suffix">
           { this.$slots.default }
         </template>

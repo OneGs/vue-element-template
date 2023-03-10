@@ -204,6 +204,12 @@ export default {
 
     onMenuClose() {
       this.broadcast('ElSelectDropdown', 'destroyPopper');
+    },
+
+    handleMousedownEnterOption() {
+      const { instance } = this;
+
+      this.$nextTick(() => instance.focusInput());
     }
   },
 
@@ -212,6 +218,7 @@ export default {
       <div
         ref="menu-container"
         class="el-select-tree__menu"
+        onMousedown={this.handleMousedownEnterOption}
       >
         <transition name="el-zoom-in-top">
           {this.renderMenu()}

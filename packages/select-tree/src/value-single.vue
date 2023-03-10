@@ -73,7 +73,6 @@ export default {
     const { instance } = this;
 
     const input = this.getInput();
-    console.log(input, 'input');
     input.setValueAndPlaceholder(this.getSelectedLabel(), instance.placeholder);
   },
 

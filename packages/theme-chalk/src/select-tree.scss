@@ -11,6 +11,10 @@
     cursor: pointer;
   }
 
+  .is-focus .el-input__inner {
+    border-color: #409EFF;
+  }
+
   @include e(control) {}
 
   @include e(menu) {}
