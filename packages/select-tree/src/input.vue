@@ -31,16 +31,10 @@ export default {
   },
 
   computed: {
-    shouldShowValue() {
-      const { instance } = this;
-
-      return instance.hasValue && !instance.trigger.searchQuery;
-    },
-
     readonly() {
       const { instance } = this;
 
-      return !instance.menu.isOpen;
+      return !instance.menu.isOpen || instance.multiple;
     }
   },
 
@@ -51,37 +45,9 @@ export default {
       }
     },
 
-    'instance.forest.selectedNodeIds': {
-      handler(val) {
-        const { instance } = this;
-
-        if (!val.length) this.currentPlaceholder = instance.placeholder;
-        this.selectedLabel = (this.shouldShowValue && this.renderSingleValueLabel()) || null;
-      }
-    },
-
     'instance.valueConsistsOf': {
       handler() {
         if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();});
-      }
-    },
-
-    'instance.menu.isOpen': {
-      handler(val) {
-        const { instance } = this;
-
-        if (val) {
-          this.currentPlaceholder = this.selectedLabel || instance.placeholder;
-          this.selectedLabel = null;
-        } else {
-          if (this.getSelectedLabel()) {
-            this.selectedLabel = this.getSelectedLabel();
-            this.currentPlaceholder = null;
-          } else {
-            this.currentPlaceholder = instance.placeholder;
-            this.selectedLabel = null;
-          }
-        }
       }
     }
   },
@@ -106,7 +72,7 @@ export default {
 
       switch (key) {
         case KEY_CODES.BACKSPACE: {
-          if (instance.backspaceRemoves) {
+          if (instance.backspaceRemoves && !this.selectedLabel) {
             instance.removeLastValue();
           }
           break;
@@ -219,28 +185,20 @@ export default {
       instance.trigger.searchQuery = searchQuery;
     },
 
-    renderSingleValueLabel() {
-      const { instance } = this;
-      const node = instance.selectedNodes[0];
+    setValueAndPlaceholder(value, placeholder, force) {
+      value && (this.selectedLabel = value);
+      placeholder && (this.currentPlaceholder = placeholder);
 
-      const customValueLabelRenderer = instance.$scopedSlots['value-label'];
-      return customValueLabelRenderer
-        ? customValueLabelRenderer({ node })
-        : node.label;
-    },
-
-    getSelectedLabel() {
-      const { instance } = this;
-      if (instance.multiple) return;
-
-      return (this.shouldShowValue && this.renderSingleValueLabel()) || null;
+      if (force) {
+        this.selectedLabel = value;
+        this.currentPlaceholder = placeholder;
+      }
     }
   },
 
   created() {
     const { instance } = this;
     this.currentPlaceholder = instance.placeholder;
-    this.selectedLabel = this.getSelectedLabel();
 
     this.debouncedCallback = debounce(
       INPUT_DEBOUNCE_DELAY,
