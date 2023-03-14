@@ -101,6 +101,14 @@ export default {
     },
 
     renderMultiTags() {
+      const { instance } = this;
+      const renderLabel = (node) => {
+        const customValueLabelRenderer = instance.$scopedSlots['value-label'];
+        return customValueLabelRenderer
+          ? customValueLabelRenderer({ node })
+          : node.label;
+      };
+
       return (
         this.selectedLimitNodes.map(node =>
           <el-tag
@@ -111,7 +119,7 @@ export default {
             disable-transitions
             onClick={() => this.deleteNode(node)}
             onClose={() => this.deleteNode(node)}>
-            <span>{ node.label }</span>
+            <span>{ renderLabel(node) }</span>
           </el-tag>
         )
       );

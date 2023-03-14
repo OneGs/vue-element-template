@@ -24,7 +24,7 @@ const Option = {
     shouldExpand() {
       const { instance, node } = this;
 
-      return node.isBranch && instance.shouldExpand(node);
+      return node.isBranch && instance.shouldExpand(node) && (!node.childrenStates || !node.childrenStates.isLoading);
     },
 
     shouldShow() {
@@ -57,6 +57,7 @@ const Option = {
           {this.renderArrow()}
           {this.renderLabelContainer([
             this.renderCheckboxContainer([this.renderCheckbox()]),
+            this.renderLoadingChildrenTip(),
             this.renderLabel()
           ])}
         </div>
@@ -70,7 +71,6 @@ const Option = {
         <div class="el-select-tree__list">
           {this.renderSubOptions()}
           {this.renderNoChildrenTip()}
-          {this.renderLoadingChildrenTip()}
           {this.renderLoadingChildrenErrorTip()}
         </div>
       );
@@ -198,22 +198,29 @@ const Option = {
 
       if (!node.childrenStates.isLoaded || node.children.length) return null;
 
+      const indentLevel = this.instance.shouldFlattenOptions ? 0 : node.level;
+      const listItemStyles = {
+        paddingLeft: (indentLevel + 1) * 24 + 5 + 'px'
+      };
+
       return (
-        <span type="no-children" icon="warning">
+        <span
+          type="no-children"
+          icon="warning"
+          style={listItemStyles}
+          class="el-select-tree__tip-text is-left">
           {instance.noChildrenText}
         </span>
       );
     },
 
     renderLoadingChildrenTip() {
-      const { instance, node } = this;
+      const { node } = this;
 
-      if (!node.childrenStates.isLoading) return null;
+      if (!node.childrenStates || !node.childrenStates.isLoading) return null;
 
       return (
-        <span type="loading" icon="loader">
-          {instance.loadingText}
-        </span>
+        <span class="el-select-tree__loading-icon el-icon-loading" />
       );
     },
 
@@ -221,9 +228,17 @@ const Option = {
       const { instance, node } = this;
 
       if (!node.childrenStates.loadingError) return null;
+      const indentLevel = this.instance.shouldFlattenOptions ? 0 : node.level;
+      const listItemStyles = {
+        paddingLeft: (indentLevel + 1) * 24 + 5 + 'px'
+      };
 
       return (
-        <span type="error" icon="error">
+        <span
+          type="error"
+          icon="error"
+          style={listItemStyles}
+          class="el-select-tree__tip-text is-left">
           {node.childrenStates.loadingError}
           <a
             class="el-select-tree__retry"
@@ -277,7 +292,7 @@ const Option = {
       [`el-select-tree__indent-level-${indentLevel}`]: true
     };
     const listItemStyles = {
-      paddingLeft: indentLevel * 18 * 2 + 'px'
+      paddingLeft: (indentLevel ? indentLevel * 24 + 5 : 5) + 'px'
     };
 
     return (

@@ -386,7 +386,7 @@ export default {
      */
     loadingText: {
       type: String,
-      default: 'Loading...'
+      default: '加载中'
     },
 
     /**
@@ -433,7 +433,7 @@ export default {
      */
     noChildrenText: {
       type: String,
-      default: 'No sub-options.'
+      default: '不存在子选项'
     },
 
     /**
@@ -449,7 +449,7 @@ export default {
      */
     noResultsText: {
       type: String,
-      default: 'No results found...'
+      default: '无匹配数据'
     },
 
     /**
@@ -527,7 +527,7 @@ export default {
      */
     retryText: {
       type: String,
-      default: 'Retry?'
+      default: '重新加载?'
     },
 
     /**
@@ -535,7 +535,7 @@ export default {
      */
     retryTitle: {
       type: String,
-      default: 'Click to retry'
+      default: '点击重试'
     },
 
     /**
@@ -559,7 +559,7 @@ export default {
      */
     searchPromptText: {
       type: String,
-      default: 'Type to search...'
+      default: '请输入查询字符'
     },
 
     /**
@@ -1619,7 +1619,7 @@ export default {
           const { id, label, children, isDefaultExpanded } = node;
           const isRootNode = parentNode === NO_PARENT_NODE;
           const level = isRootNode ? 0 : parentNode.level + 1;
-          const isBranch = Array.isArray(children) || children === null;
+          const isBranch = !node.isLeaf && (Array.isArray(children) || children === null);
           const isLeaf = !isBranch;
           const isDisabled =
             !!node.isDisabled ||

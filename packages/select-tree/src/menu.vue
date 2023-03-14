@@ -162,7 +162,7 @@ export default {
     renderLoadingOptionsTip() {
       const { instance } = this;
       return (
-        <span className="el-select-tree__tip-text">
+        <span class="el-select-tree__tip-text">
           {instance.loadingText}
         </span>
       );
@@ -172,7 +172,7 @@ export default {
       const { instance } = this;
 
       return (
-        <span className="el-select-tree__tip-text">
+        <span class="el-select-tree__tip-text is-left">
           {instance.errorText}
         </span>
       );

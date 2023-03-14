@@ -15,6 +15,17 @@
     border-color: #409EFF;
   }
 
+  .el-tag__close.el-icon-close {
+    background-color: #C0C4CC;
+    color: #909399;;
+    flex-shrink: 0;
+
+    &:hover {
+      color: #FFFFFF;
+      background-color: #909399;
+    }
+  }
+
   @include e(control) {}
 
   @include e(menu) {}
@@ -58,6 +69,22 @@
     }
   }
 
+  .arrow {
+    display: table-cell;
+    vertical-align: middle;
+    width: 24px;
+    text-align: center;
+    line-height: 0;
+  }
+
+  @include e(option-arrow-container) {
+    @extend .arrow;
+  }
+
+  @include e(option-arrow-placeholder) {
+    @extend .arrow;
+  }
+
   @include e(icon-item) {
     cursor: pointer;
     color: #C0C4CC;
@@ -87,10 +114,11 @@
     flex: 1;
     vertical-align: middle;
     cursor: pointer;
-    display: table;
     width: 100%;
     table-layout: fixed;
     color: inherit;
+    display: flex;
+    align-items: center;
   }
 
   @include e(caret) {
@@ -166,5 +194,20 @@
     font-size: 14px;
     display: inline-block;
     width: 100%;
+
+    &.is-left {
+      text-align: left;
+    }
+  }
+
+  @include e(loading-icon) {
+    height: 13px;
+    margin: 0 4px;
+  }
+
+  @include e(retry) {
+    cursor: pointer;
+    display: inline-block;
+    margin-left: 4px;
   }
 }

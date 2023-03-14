@@ -17,13 +17,13 @@
                     border-radius: 5px">
             value: {{ value }}
         </div>
-        <el-radio-group 
-                v-model="checked" 
-                style="padding: 1rem 0" 
+        <el-radio-group
+                v-model="checked"
+                style="padding: 1rem 0"
                 v-for="index in checkedOptionsLen"
                 :key="index"
         >
-            <template v-for="jndex in 3" >
+            <template v-for="jndex in 3">
                 <el-radio
                         v-if="checkedOptionsKeys[(index - 1) * 3 + (jndex - 1)]"
                         :key="checkedOptionsKeys[(index - 1) * 3 + (jndex -1)]"
@@ -32,7 +32,7 @@
                 </el-radio>
             </template>
         </el-radio-group>
-        <el-select-tree 
+        <el-select-tree
                 :options="options"
                 v-model="value"
                 :multiple="showMultiple"
@@ -47,7 +47,7 @@
                 :backspace-removes="checked !== 'BACK_SPACE_REMOVES'"
                 :clearable="checked !== 'CLEARABLE'"
                 :clear-on-select="checked === 'CLEAR_ON_SELECT'"
-                :close-on-select="checked === 'CLOSE_ON_SELECT'"
+                :close-on-select="checked !== 'CLOSE_ON_SELECT'"
                 :flatten-search-results="checked === 'FLATTEN_SEARCH_RESULT'"
                 :disable-fuzzy-matching="checked === 'DISABLED_FUZZY_MATCHING'"
                 :search-nested="checked === 'SEARCH_NESTED'"
@@ -129,9 +129,9 @@
                     'NO_SEARCHABLE': '禁用搜索（默认开启）',
                     'BACK_SPACE_REMOVES': '没有输入时，不允许删除最后一项（默认允许）',
                     'CLEARABLE': '是否显示重置值的“×”按钮（默认显示）',
-                    // 'CLOSE_ON_SELECT': '单选模式下，选择后可不关闭menu',
-                    'FLATTEN_SEARCH_RESULT': '搜索时是否展平树（仅同步搜索模式）',
-                    'DISABLED_FUZZY_MATCHING': '设置为true 禁用默认情况下启用的模糊匹配功能。',
+                    'CLOSE_ON_SELECT': '单选模式，选择不关闭menu',
+                    'FLATTEN_SEARCH_RESULT': '搜索时是否展平树（仅同步）',
+                    'DISABLED_FUZZY_MATCHING': '设置为true禁用默认情况下启用的模糊匹配功。',
                     'SEARCH_NESTED': '巢状搜索'
                 },
                 options: OPTIONS
@@ -282,7 +282,7 @@
                     border-radius: 5px ">
             value: {{ sortedValue }}
         </div>
-        <el-select-tree
+        <el-select-tree 
                 flat
                 :options="options"
                 :multiple="true"
@@ -338,6 +338,259 @@
                         }],
                     }],
             }
+        }
+    }
+</script>
+```
+:::
+
+### 延迟加载
+
+如果您有大量深度嵌套的选项，则可能只希望在初始加载时加载最顶层的选项，而仅在需要时加载其余选项。您可以通过执行以下步骤来实现：
+
+* 通过设置声明一个卸载的分支节点children: null
+* 添加 loadOptions 道具
+* 每当卸载的分支节点被扩展时， loadOptions({ action, parentNode, callback, instanceId }) 都会被调用，然后您就可以执行从远程服务器请求数据的作业
+
+:::demo 
+```html
+
+<template>
+    <div>
+        <div style="
+                    margin-bottom: 1rem; 
+                    background-color: #F5F7FA; 
+                    padding: 10px; 
+                    border-radius: 5px ">
+            value: {{ value }}
+        </div>
+        <el-select-tree
+                :multiple="true"
+                :options="options"
+                :load-options="loadOptions"
+                placeholder="尝试展开任意分支节点"
+                v-model="value"
+        />
+    </div>
+</template>
+
+<script>
+    const simulateAsyncOperation = fn => {
+        setTimeout(fn, 200)
+    }
+
+    export default {
+        data() {
+            return {
+                value: [],
+                options: [{
+                    id: 'success',
+                    label: '存在子选项',
+                    // Declare an unloaded branch node.
+                    children: null,
+                }, {
+                    id: 'no-children-show-message',
+                    label: '没有子选项，显示提示信息',
+                    children: null,
+                }, {
+                    id: 'no-children',
+                    label: '没有子选项，不显示提示信息（改为隐藏箭头标识）—— 不建议使用',
+                    children: null,
+                    isLeaf: false,
+                },{
+                    id: 'failure',
+                    label: '由于各种原因造成的失败',
+                    children: null,
+                }, {
+                    id: 'is Leaf',
+                    label: '允许设置isLeaf为true将节点标记为叶子节点，优先级大children',
+                    children: null,
+                    isLeaf: true,
+                }],
+            }
+        },
+
+        methods: {
+            loadOptions({action, parentNode, callback}) {
+                // LOAD_CHILDREN_OPTIONS
+                if (action === 'LOAD_CHILDREN_OPTIONS') {
+                    switch (parentNode.id) {
+                        case 'success': {
+                            simulateAsyncOperation(() => {
+                                parentNode.children = [{
+                                    id: 'child',
+                                    label: 'Child option',
+                                }]
+                                callback()
+                            })
+                            break
+                        }
+                        case 'no-children': {
+                            simulateAsyncOperation(() => {
+                                // this.$set(parentNode, 'isLeaf', true)
+                                parentNode.isLeaf = true
+                                callback()
+                            })
+                            break
+                        }
+                        case 'no-children-show-message': {
+                            simulateAsyncOperation(() => {
+                                // parentNode.children = null
+                                callback()
+                            })
+                            break 
+                        }
+                        case 'failure': {
+                            simulateAsyncOperation(() => {
+                                callback(new Error('加载失败，网络错误。'))
+                            })
+                            break
+                        }
+                        default: /* empty */
+                    }
+                }
+            }
+        }
+    }
+</script>
+```
+:::
+
+### 异步搜索
+
+vue-treeselect支持根据用户类型动态加载和更改整个选项列表。默认情况下，vue-treeselect将缓存每个AJAX请求的结果，因此用户可以减少等待时间。
+
+:::demo 
+```html
+
+<template>
+    <div>
+        <div style="
+                    margin-bottom: 1rem; 
+                    background-color: #F5F7FA; 
+                    padding: 10px; 
+                    border-radius: 5px ">
+            value: {{ value }}
+        </div>
+        <el-select-tree
+                :multiple="true"
+                :async="true"
+                :load-options="loadOptions"
+                v-model="value"
+        />
+    </div>
+</template>
+
+<script>
+    const simulateAsyncOperation = fn => {
+        setTimeout(fn, 2000)
+    }
+
+    export default {
+        data() {
+            return {
+                value: [],
+            }
+        },
+
+        methods: {
+            loadOptions({action, searchQuery, callback}) {
+                // LOAD_CHILDREN_OPTIONS
+                if (action === 'ASYNC_SEARCH') {
+                    simulateAsyncOperation(() => {
+                        const options = [ 1, 2, 3, 4, 5 ].map(i => ({
+                            id: `${searchQuery}-${i}`,
+                            label: `${searchQuery}-${i}`,
+                        }))
+                        callback(null, options)
+                    })
+                }
+            }
+        }
+    }
+</script>
+```
+:::
+
+### 自定义键名 & 自定义选项标签 & 自定义值标签
+
+如果通过AJAX加载的选项数据与vue-treeselect要求的数据结构不同，
+例如，您的数据具有name属性，但vue-treeselect需要label，则可能需要自定义键名。
+在这种情况下，您可以提供一个称为函数的propnormalizer，在数据初始化期间它将传递给树中的每个节点。
+使用此函数创建并返回转换后的对象。
+
+:::demo 您可以通过option-label自定义每个选项的标签、value-label自定义选项后的输出值
+```html
+
+<template>
+    <div>
+        <div style="
+                    margin-bottom: 1rem; 
+                    background-color: #F5F7FA; 
+                    padding: 10px; 
+                    border-radius: 5px ">
+            value: {{ value }}
+        </div>
+        <el-select-tree
+                :options="options"
+                :multiple="true"
+                :normalizer="normalizer"
+                value-consists-of="ALL"
+                v-model="value"
+        >
+            <label 
+                    slot="option-label" 
+                    slot-scope="{ node, shouldShowCount, count, labelClassName, countClassName }" 
+                    :class="labelClassName">
+                {{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}
+                <span v-if="shouldShowCount" :class="countClassName">({{ count }})</span>
+            </label>
+
+            <div slot="value-label" slot-scope="{ node }">{{ node.isBranch ? 'Branch' : 'Leaf' }}: {{ node.label }}</div>
+        </el-select-tree>
+    </div>
+</template>
+
+<script>
+    const simulateAsyncOperation = fn => {
+        setTimeout(fn, 2000)
+    }
+
+    export default {
+        data() {
+            return {
+                value: [],
+                options: [
+                    { 
+                        value: 'A', 
+                        name: 'A', 
+                        child: [
+                            {
+                                value: 'AA',
+                                name: 'AA',
+                                child: []
+                            },
+                            {
+                                value: 'AB',
+                                name: 'AB',
+                                child: [],
+                                leaf: true
+                            }
+                        ] 
+                    }
+                ]
+            }
+        },
+
+        methods: {
+            normalizer(node) {
+                return {
+                    id: node.value,
+                    label: node.name,
+                    children: node.child,
+                    isLeaf: node.leaf
+                }
+            },
         }
     }
 </script>
