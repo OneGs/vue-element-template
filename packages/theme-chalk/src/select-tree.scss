@@ -194,6 +194,7 @@
     font-size: 14px;
     display: inline-block;
     width: 100%;
+    box-sizing: border-box;
 
     &.is-left {
       text-align: left;
