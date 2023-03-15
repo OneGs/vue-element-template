@@ -4,7 +4,7 @@
 
 在select的基础上添加树形选择功能，并提供丰富的操作模式。
 
-:::demo 通过options进行赋值，默认为单选模式。允许在data上设置`isDisabled`为true，禁用选项。通过设置`clearable`为true（默认），开启清空功能。
+:::demo 通过options进行赋值，默认为单选模式。允许在data上设置`isDisabled`为true，禁用选项。通过设置`clearable`为true（默认），开启清空功能。defaultExpandLevel加载时应自动扩展多少级分支节点。设置 Infinity 为默认使所有分支节点扩展。
 
 ```html
 
@@ -51,6 +51,8 @@
                 :flatten-search-results="checked === 'FLATTEN_SEARCH_RESULT'"
                 :disable-fuzzy-matching="checked === 'DISABLED_FUZZY_MATCHING'"
                 :search-nested="checked === 'SEARCH_NESTED'"
+                :default-expand-level="1"
+                :append-to-body="checked === 'appendToBody'"
         />
     </div>
 </template>
@@ -114,7 +116,7 @@
     export default {
         data() {
             return {
-                value: 'fruits 1',
+                value: 'tomato',
                 checked: null,
                 checkedOptions: {
                     'DISABLED': '禁用操作',
@@ -132,7 +134,8 @@
                     'CLOSE_ON_SELECT': '单选模式，选择不关闭menu',
                     'FLATTEN_SEARCH_RESULT': '搜索时是否展平树（仅同步）',
                     'DISABLED_FUZZY_MATCHING': '设置为true禁用默认情况下启用的模糊匹配功。',
-                    'SEARCH_NESTED': '巢状搜索'
+                    'SEARCH_NESTED': '巢状搜索',
+                    'appendToBody': '添加到body'
                 },
                 options: OPTIONS
             }

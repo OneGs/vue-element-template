@@ -282,14 +282,6 @@ export default {
     },
 
     /**
-     * Delimiter to use to join multiple values for the hidden field value.
-     */
-    delimiter: {
-      type: String,
-      default: ','
-    },
-
-    /**
      * Only show the nodes that match the search value directly, excluding its ancestors.
      *
      * @type {Object}
@@ -342,14 +334,6 @@ export default {
       // Add two trailing "$" to distinguish from explictly specified ids.
       default: () => `${instanceId++}$$`,
       type: [String, Number]
-    },
-
-    /**
-     * Joins multiple values into a single form field with the `delimiter` (legacy mode).
-     */
-    joinValues: {
-      type: Boolean,
-      default: false
     },
 
     /**
@@ -459,27 +443,6 @@ export default {
     normalizer: {
       type: Function,
       default: identity
-    },
-
-    /**
-     * By default (`auto`), the menu will open below the control. If there is not
-     * enough space, vue-treeselect will automatically flip the menu.
-     * You can use one of other four options to force the menu to be always opened
-     * to specified direction.
-     * Acceptable values:
-     *   - `"auto"`
-     *   - `"below"`
-     *   - `"bottom"`
-     *   - `"above"`
-     *   - `"top"`
-     */
-    openDirection: {
-      type: String,
-      default: 'auto',
-      validator(value) {
-        const acceptableValues = ['auto', 'top', 'bottom', 'above', 'below'];
-        return includes(acceptableValues, value);
-      }
     },
 
     /**
@@ -667,14 +630,6 @@ export default {
     valueFormat: {
       type: String,
       default: 'id'
-    },
-
-    /**
-     * z-index of the menu.
-     */
-    zIndex: {
-      type: [Number, String],
-      default: 999
     }
   },
 
@@ -1445,14 +1400,8 @@ export default {
       return this.$refs.control.$el;
     },
 
-    getMenu() {
-      const ref = this.appendToBody ? this.$refs.portal.portalTarget : this;
-      const $menu = ref.$refs.menu.$refs.menu;
-      return $menu && $menu.nodeName !== '#comment' ? $menu : null;
-    },
-
     getScrollWrapper() {
-      const ref = this.appendToBody ? this.$refs.portal.portalTarget : this;
+      const ref = this;
       const $menu = ref.$refs.menu.$refs.scrollbar.$el.querySelector('.el-scrollbar__wrap');
       return $menu && $menu.nodeName !== '#comment' ? $menu : null;
     },

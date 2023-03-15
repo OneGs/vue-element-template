@@ -1,7 +1,6 @@
 <script>
 import ElSelectMenu from './select-dropdown.vue';
 import ElScrollbar from 'element-ui/packages/scrollbar';
-import ElVirtualScroll from 'element-ui/packages/virtual-scroller';
 import Emitter from 'element-ui/src/mixins/emitter';
 import Option from './Option';
 
@@ -12,7 +11,7 @@ export default {
 
   mixins: [Emitter],
 
-  components: {ElSelectMenu, ElScrollbar, Option, ElVirtualScroll},
+  components: {ElSelectMenu, ElScrollbar, Option},
 
   watch: {
     'instance.menu.isOpen'(newValue) {
@@ -37,64 +36,26 @@ export default {
       return (
         <el-select-menu
           v-show={instance.menu.isOpen}
-          appendToBody={false}
+          appendToBody={instance.appendToBody}
         >
-          {
-            instance.virtualScroll
-              ? this.renderVirtualMenu()
-              : this.renderStaticMenu()
-          }
+          <el-scrollbar
+            tag="ul"
+            wrap-class="el-select-dropdown__wrap"
+            view-class="el-select-dropdown__list"
+            ref="scrollbar">
+            <div
+              ref="menu"
+              className="el-select-tree__inner-menu"
+              onMouseDown={instance.handleMouseDown}
+            >
+              {instance.async
+                ? this.renderAsyncSearchMenuInner()
+                : instance.localSearch.active
+                  ? this.renderLocalSearchMenuInner()
+                  : this.renderNormalMenuInner()}
+            </div>
+          </el-scrollbar>
         </el-select-menu>
-      );
-    },
-
-    renderStaticMenu() {
-      const { instance } = this;
-
-      return (
-        <el-scrollbar
-          tag="ul"
-          wrap-class="el-select-dropdown__wrap"
-          view-class="el-select-dropdown__list"
-          ref="scrollbar">
-          <div
-            ref="menu"
-            className="el-select-tree__inner-menu"
-            onMouseDown={instance.handleMouseDown}
-          >
-            {instance.async
-              ? this.renderAsyncSearchMenuInner()
-              : instance.localSearch.active
-                ? this.renderLocalSearchMenuInner()
-                : this.renderNormalMenuInner()}
-          </div>
-        </el-scrollbar>
-      );
-    },
-
-    renderVirtualMenu() {
-      const { instance } = this;
-
-      const scopedSlots = {
-        default: ({ item }) => {
-          return (
-            <Option
-              node={item}
-              key={item.id}
-            />
-          );
-        }
-      };
-
-      return (
-        <el-virtual-scroll
-          style="max-height: 285px"
-          ref="scrollbar"
-          key-field="id"
-          item-size={34}
-          items={instance.forest.normalizedVirtualOptions}
-          {...{ scopedSlots }}>
-        </el-virtual-scroll>
       );
     },
 

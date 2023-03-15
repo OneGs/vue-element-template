@@ -40,7 +40,6 @@ export default {
 
   methods: {
     onKeyDown(evt) {
-      console.log('zhi');
       const { instance } = this;
       // https://css-tricks.com/snippets/javascript/javascript-keycodes/
       // https://stackoverflow.com/questions/4471582/javascript-keycode-vs-which
