@@ -88,5 +88,6 @@
   "descriptions": "./packages/descriptions/index.js",
   "descriptions-item": "./packages/descriptions-item/index.js",
   "result": "./packages/result/index.js",
-  "select-tree": "./packages/select-tree"
+  "select-tree": "./packages/select-tree/index.js",
+  "virtual-scroller": "./packages/virtual-scroller/index.js"
 }
