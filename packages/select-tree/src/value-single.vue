@@ -10,14 +10,6 @@ export default {
     Input
   },
 
-  computed: {
-    shouldShowValue() {
-      const { instance } = this;
-
-      return instance.hasValue && !instance.trigger.searchQuery;
-    }
-  },
-
   watch: {
     // 根据选中值，变化显示
     'instance.forest.selectedNodeIds': {
@@ -25,7 +17,7 @@ export default {
         const { instance } = this;
 
         const input = this.getInput();
-        input.setValueAndPlaceholder(this.getSelectedLabel(), !val.length && instance.placeholder);
+        input.setValueAndPlaceholder(this.getSelectedLabel(), !val.length && instance.placeholder, !this.getSelectedLabel());
       }
     },
 
@@ -57,11 +49,11 @@ export default {
       const customValueLabelRenderer = instance.$scopedSlots['value-label'];
       return customValueLabelRenderer
         ? customValueLabelRenderer({ node })
-        : node.label;
+        : node && node.label;
     },
 
     getSelectedLabel() {
-      return (this.shouldShowValue && this.renderSingleValueLabel()) || null;
+      return this.renderSingleValueLabel();
     },
 
     getInput() {
