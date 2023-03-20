@@ -90,6 +90,7 @@ import { ElDescriptionsItem } from './descriptions-item'
 import { ElResult } from './result'
 import { ElStatistic } from './statistic'
 import { ElVirtualScroller } from './virtual-scroller'
+import { ElVirtualSelectTree } from './virtual-select-tree'
 
 export interface InstallationOptions {
   locale: any,
@@ -383,3 +384,6 @@ export class Result extends ElResult {}
 export class Statistic extends ElStatistic {}
 /** VirtualScroller Component */
 export class VirtualScroller extends ElVirtualScroller {}
+
+/** VirtualSelectTree Component */
+export class VirtualSelectTree extends ElVirtualSelectTree {}

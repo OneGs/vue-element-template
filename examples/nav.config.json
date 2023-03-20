@@ -16,10 +16,6 @@
       "name": "开发指南",
       "children": [
         {
-          "path": "/test",
-          "name": "测试"
-        },
-        {
           "path": "/installation",
           "name": "安装"
         },
@@ -318,7 +314,11 @@
             },
             {
               "path": "/virtual-scroller",
-              "title": "VirtualScroller"
+              "title": "virtual scroller 虚拟滚动"
+            },
+            {
+              "path": "/virtual-select-tree",
+              "title": "virtual select tree 虚拟选择树"
             }
           ]
         }
@@ -641,6 +641,10 @@
             {
               "path": "/virtual-scroller",
               "title": "VirtualScroller"
+            },
+            {
+              "path": "/virtual-select-tree",
+              "title": "VirtualSelectTree"
             }
           ]
         }
@@ -963,6 +967,10 @@
             {
               "path": "/virtual-scroller",
               "title": "VirtualScroller"
+            },
+            {
+              "path": "/virtual-select-tree",
+              "title": "VirtualSelectTree"
             }
           ]
         }
@@ -1285,6 +1293,10 @@
             {
               "path": "/virtual-scroller",
               "title": "VirtualScroller"
+            },
+            {
+              "path": "/virtual-select-tree",
+              "title": "VirtualSelectTree"
             }
           ]
         }
