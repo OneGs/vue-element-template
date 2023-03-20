@@ -988,7 +988,7 @@ export default {
       // When the real data is loaded, we'll override this fake node.
 
       const raw = this.extractNodeFromValue(id);
-      const label = this.enhancedNormalizer(raw).label || `${id} (unknown)`;
+      const label = this.enhancedNormalizer(raw).label || `${id}`;
       const fallbackNode = {
         id,
         label,
