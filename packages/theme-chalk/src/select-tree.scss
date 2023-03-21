@@ -211,4 +211,8 @@
     display: inline-block;
     margin-left: 4px;
   }
+
+  @include e(value-multi) {
+    position: relative;
+  }
 }

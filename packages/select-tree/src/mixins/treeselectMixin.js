@@ -88,6 +88,16 @@ export default {
     };
   },
 
+  inject: {
+    elForm: {
+      default: ''
+    },
+
+    elFormItem: {
+      default: ''
+    }
+  },
+
   props: {
     /**
      * Whether to allow resetting value even if there are disabled selected nodes.
@@ -341,7 +351,7 @@ export default {
      */
     size: {
       type: String,
-      default: 'medium'
+      default: null
     },
 
     /**
@@ -812,8 +822,17 @@ export default {
       return this.forest.normalizedOptions.some(
         (rootNode) => rootNode.isBranch);
     },
+    /** Is Flat options */
     shouldFlattenOptions() {
       return this.localSearch.active && this.flattenSearchResults;
+    },
+    /** adapt size from el-form */
+    _elFormItemSize() {
+      return (this.elFormItem || {}).elFormItemSize;
+    },
+    /** input size */
+    selectSize() {
+      return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size;
     }
     /* eslint-enable valid-jsdoc */
   },

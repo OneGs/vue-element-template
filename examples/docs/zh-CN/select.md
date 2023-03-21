@@ -202,6 +202,7 @@
     multiple
     collapse-tags
     style="margin-left: 20px;"
+    size="mini"
     placeholder="请选择">
     <el-option
       v-for="item in options"

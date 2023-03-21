@@ -174,6 +174,79 @@
 ```
 :::
 
+### 大小控制
+
+:::demo 
+
+```html
+
+<template>
+    <div>
+        <div style="
+                    margin-bottom: 1rem; 
+                    background-color: #F5F7FA; 
+                    padding: 10px; 
+                    border-radius: 5px">
+            value: {{ value }}
+        </div>
+        <el-radio-group v-model="checked" style="margin-bottom: 1rem">
+            <el-radio :label="key" v-for="(value, key) in checkedOptions" :key="key">{{ value }}</el-radio>
+        </el-radio-group>
+        <el-select-tree
+                :options="options"
+                :multiple="true"
+                v-model="value"
+                :size="checked"
+        />
+    </div>
+</template>
+
+<script>
+    const OPTIONS = [{
+        id: 'fruits 1',
+        label: 'Fruits',
+        children: [
+            {
+                id: 'apple',
+                label: 'This  Apple 🍎',
+                isNew: true,
+            },
+            {
+                id: 'grapes',
+                label: 'Grapes 🍇',
+                isDisabled: true,
+            },
+            {
+                id: 'pear',
+                label: 'Pear 🍐',
+                isDisabled: true,
+            },
+            {
+                id: 'strawberry',
+                label: 'Strawberry 🍓',
+            }
+        ]
+    }]
+
+    export default {
+        data() {
+            return {
+                value: null,
+                checked: '',
+                checkedOptions: {
+                    '': '默认',
+                    'medium': '中',
+                    'small': '小',
+                    'mini': '迷你'
+                },
+                options: OPTIONS
+            }
+        },
+    }
+</script>
+```
+:::
+
 ### 节点选择模式
 
 对于非固定和多选模式，如果选中了分支节点及其所有后代，则vue-treeselect会将它们组合到值数组中的单个项目中，如以下示例所示。通过使用valueConsistsOf道具，您可以更改该行为。该道具有四个选项：

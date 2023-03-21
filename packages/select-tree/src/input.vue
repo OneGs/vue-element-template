@@ -163,11 +163,22 @@ export default {
       const input = this.$refs.input;
       if (!input) return;
 
+      const { instance } = this;
+      const sizeMap = {
+        medium: 36,
+        small: 32,
+        mini: 28
+      };
       const inputEle = input.$el.querySelector('input');
       const tags = this.$parent.$refs.tags;
-      const tagsHeight = tags ? tags.getBoundingClientRect().height || 40 : 0;
-      const height = tagsHeight > this.initialInputHeight ? tagsHeight + 6 : tagsHeight;
-      inputEle.style.height = Math.max(height, this.initialInputHeight) + 'px';
+      const tagsHeight = tags ? tags.getBoundingClientRect().height : 0;
+      const sizeInMap = sizeMap[instance.selectSize] || 40;
+      inputEle.style.height = !instance.hasValue
+        ? sizeInMap + 'px'
+        : Math.max(
+          tags ? (tagsHeight + (tagsHeight > sizeInMap ? 6 : 0)) : 0,
+          sizeInMap
+        ) + 'px';
     },
 
     updateSearchQuery(searchQuery) {
@@ -189,7 +200,8 @@ export default {
       const needWatch = [
         'instance.forest.selectedNodeIds.length',
         'instance.valueConsistsOf',
-        'instance.flat'
+        'instance.flat',
+        'instance.selectSize'
       ];
       const handler = () => { if (this.instance.multiple) this.$nextTick(() => {this.resetInputHeight();}); };
 
@@ -218,13 +230,21 @@ export default {
       const reference = this.$refs.input;
 
       if (reference && reference.$el) {
+        const sizeMap = {
+          medium: 36,
+          small: 32,
+          mini: 28
+        };
+
         // init Width
         instance.inputWidth = reference.$el.getBoundingClientRect().width;
 
         // init Height
         const inputElm = reference.$el.querySelector('input');
-        this.initialInputHeight = inputElm.getBoundingClientRect().height || 40;
-        this.resetInputHeight();
+        this.initialInputHeight = inputElm.getBoundingClientRect().height || sizeMap[instance.selectSize];
+        // if (instance.remote && instance.multiple) {
+        //   this.resetInputHeight();
+        // }
       }
     });
   },
@@ -247,6 +267,7 @@ export default {
         onFocus={this.onFocus}
         onBlur={this.onBlur}
         validate-event={false}
+        size={instance.selectSize}
         value={ this.selectedLabel }
         class={classes}>
         <template slot="suffix">
