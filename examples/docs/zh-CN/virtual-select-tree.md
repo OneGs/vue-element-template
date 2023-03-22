@@ -247,6 +247,78 @@
 ```
 :::
 
+### 在ElForm中运用
+
+:::demo
+
+```html
+<template>
+    <div>
+        <div style="
+                    margin-bottom: 1rem; 
+                    background-color: #F5F7FA; 
+                    padding: 10px; 
+                    border-radius: 5px">
+            value: {{ value }}
+        </div>
+        <el-form inline label-width="120px">
+            <el-form-item label="名称">
+                <el-input placeholder="请输入名称" />
+            </el-form-item>
+            <el-form-item label="水果">
+                <el-select-tree
+                        style="width: 400px"
+                        placeholder="请选择需要的水果"
+                        :options="options"
+                        :multiple="true"
+                        v-model="value"
+                        :size="checked"
+                />
+            </el-form-item>
+        </el-form>
+    </div>
+</template>
+
+<script>
+    const OPTIONS = [{
+        id: 'fruits 1',
+        label: 'Fruits',
+        children: [
+            {
+                id: 'apple',
+                label: 'This  Apple 🍎',
+                isNew: true,
+            },
+            {
+                id: 'grapes',
+                label: 'Grapes 🍇',
+                isDisabled: true,
+            },
+            {
+                id: 'pear',
+                label: 'Pear 🍐',
+                isDisabled: true,
+            },
+            {
+                id: 'strawberry',
+                label: 'Strawberry 🍓',
+            }
+        ]
+    }]
+
+    export default {
+        data() {
+            return {
+                value: null,
+                checked: '',
+                options: OPTIONS
+            }
+        },
+    }
+</script>
+```
+:::
+
 ### 节点选择模式
 
 对于非固定和多选模式，如果选中了分支节点及其所有后代，则vue-treeselect会将它们组合到值数组中的单个项目中，如以下示例所示。通过使用valueConsistsOf道具，您可以更改该行为。该道具有四个选项：
