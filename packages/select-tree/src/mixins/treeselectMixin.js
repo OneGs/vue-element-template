@@ -2048,6 +2048,20 @@ export default {
       const $menu = this.getScrollWrapper();
       // istanbul ignore else
       if ($menu) $menu.scrollTop = this.menu.lastScrollPosition;
+    },
+
+    /** calculate padding left for options */
+    optionsPaddingLeft(node) {
+      const indentLevel = this.shouldFlattenOptions ? 0 : node.level;
+
+      return (indentLevel ? indentLevel * 24 + 5 : 5) + 'px';
+    },
+
+    /** calculate padding left for options tip */
+    optionsTipPaddingLeft(node) {
+      const indentLevel = this.shouldFlattenOptions ? 0 : node.level;
+
+      return (indentLevel + 1) * 24 + 5 + 'px';
     }
   },
 

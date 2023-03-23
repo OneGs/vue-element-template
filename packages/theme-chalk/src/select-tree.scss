@@ -1,6 +1,18 @@
 @import "mixins/mixins";
 @import "common/var";
 
+.arrow {
+  display: table-cell;
+  vertical-align: middle;
+  width: 24px;
+  text-align: center;
+  line-height: 0;
+}
+
+.el-select-tree__option-arrow-placeholder {
+  @extend .arrow;
+}
+
 @include b(select-tree) {
   position: relative;
   cursor: default;
@@ -69,14 +81,10 @@
         padding: 0 15px !important;
       }
     }
-  }
 
-  .arrow {
-    display: table-cell;
-    vertical-align: middle;
-    width: 24px;
-    text-align: center;
-    line-height: 0;
+    &.is-flat-result {
+      padding: 0 15px !important;
+    }
   }
 
   @include e(option-arrow-container) {

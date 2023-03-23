@@ -58,7 +58,7 @@ const Option = {
         'el-select-tree__option--highlight': node.isHighlighted,
         'el-select-tree__option--matched':
           instance.localSearch.active && node.isMatched,
-        'is-flat-result': instance.flattenSearchResults,
+        'is-flat-result': instance.flattenSearchResults || !instance.hasBranchNodes,
         'el-select-tree__option--hide': !this.shouldShow
       };
 
@@ -212,9 +212,8 @@ const Option = {
 
       if (!node.childrenStates.isLoaded || node.children.length) return null;
 
-      const indentLevel = this.instance.shouldFlattenOptions ? 0 : node.level;
       const listItemStyles = {
-        paddingLeft: (indentLevel + 1) * 24 + 5 + 'px'
+        paddingLeft: instance.optionsTipPaddingLeft(node)
       };
 
       return (
@@ -242,9 +241,8 @@ const Option = {
       const { instance, node } = this;
 
       if (!node.childrenStates.loadingError) return null;
-      const indentLevel = this.instance.shouldFlattenOptions ? 0 : node.level;
       const listItemStyles = {
-        paddingLeft: (indentLevel + 1) * 24 + 5 + 'px'
+        paddingLeft: instance.optionsTipPaddingLeft(node)
       };
 
       return (
@@ -299,14 +297,14 @@ const Option = {
   },
 
   render() {
-    const { node } = this;
+    const { node, instance } = this;
     const indentLevel = this.instance.shouldFlattenOptions ? 0 : node.level;
     const listItemClass = {
       'el-select-tree__list-item': true,
       [`el-select-tree__indent-level-${indentLevel}`]: true
     };
     const listItemStyles = {
-      paddingLeft: (indentLevel ? indentLevel * 24 + 5 : 5) + 'px'
+      paddingLeft: instance.optionsPaddingLeft(node)
     };
 
     return (
