@@ -129,7 +129,7 @@ export default {
      */
     appendToBody: {
       type: Boolean,
-      default: false
+      default: true
     },
 
     /**
@@ -1205,7 +1205,6 @@ export default {
 
     handleMouseDown: onLeftClick(function handleMouseDown(evt) {
       evt.preventDefault();
-      // evt.stopPropagation();
 
       if (this.disabled) return;
 

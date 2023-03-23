@@ -46,7 +46,7 @@ export default {
             <div
               ref="menu"
               className="el-select-tree__inner-menu"
-              onMouseDown={instance.handleMouseDown}
+              onMousedown={instance.handleMouseDown}
             >
               {instance.async
                 ? this.renderAsyncSearchMenuInner()

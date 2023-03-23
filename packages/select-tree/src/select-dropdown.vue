@@ -84,7 +84,7 @@
 
     mounted() {
       const { instance } = this;
-      this.popperElm = this.$el;
+      instance.popperElm = this.popperElm = this.$el;
 
       this.$on('updatePopper', () => {
         this.referenceElm = this.getInputComponent().$el;
