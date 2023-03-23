@@ -253,30 +253,28 @@
 
 ```html
 <template>
-    <div>
-        <div style="
-                    margin-bottom: 1rem; 
-                    background-color: #F5F7FA; 
-                    padding: 10px; 
-                    border-radius: 5px">
-            value: {{ value }}
-        </div>
-        <el-form inline label-width="120px">
-            <el-form-item label="名称">
-                <el-input placeholder="请输入名称" />
-            </el-form-item>
-            <el-form-item label="水果">
-                <el-select-tree
-                        style="width: 400px"
-                        placeholder="请选择需要的水果"
-                        :options="options"
-                        :multiple="true"
-                        v-model="value"
-                        :size="checked"
-                />
-            </el-form-item>
-        </el-form>
-    </div>
+    <el-form inline label-width="100px">
+        <el-form-item label="名称">
+            <el-select v-model="value1" placeholder="请选择" filterable>
+                <el-option
+                        v-for="item in options"
+                        :key="item.id"
+                        :label="item.label"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="水果">
+            <el-select-tree
+                    style="width: 400px"
+                    placeholder="请选择需要的水果"
+                    :options="options"
+                    :multiple="true"
+                    v-model="value"
+                    :size="checked"
+            />
+        </el-form-item>
+    </el-form>
 </template>
 
 <script>
@@ -292,12 +290,10 @@
             {
                 id: 'grapes',
                 label: 'Grapes 🍇',
-                isDisabled: true,
             },
             {
                 id: 'pear',
                 label: 'Pear 🍐',
-                isDisabled: true,
             },
             {
                 id: 'strawberry',
@@ -309,6 +305,7 @@
     export default {
         data() {
             return {
+                value1: null,
                 value: null,
                 checked: '',
                 options: OPTIONS

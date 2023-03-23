@@ -200,7 +200,29 @@ export default {
       const { instance } = this;
 
       this.$nextTick(() => instance.focusInput());
+    },
+
+    watch2UpdateMenuPopper() {
+      const needWatch = [
+        'instance.forest.selectedNodeIds.length',
+        'instance.selectSize'
+      ];
+      const handler = () => {
+        if (this.instance.multiple) {
+          this.$nextTick(() => {
+            this.onMenuOpen();
+          });
+        }
+      };
+
+      needWatch.map((watch) => {
+        this.$watch(watch, handler);
+      });
     }
+  },
+
+  created() {
+    this.watch2UpdateMenuPopper();
   },
 
   render() {

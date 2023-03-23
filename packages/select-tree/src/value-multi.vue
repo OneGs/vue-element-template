@@ -51,7 +51,8 @@ export default {
 
   data() {
     return {
-      selectedLabel: null
+      selectedLabel: null,
+      inputLength: 20
     };
   },
 
@@ -129,7 +130,7 @@ export default {
       const { instance } = this;
       const styles = {
         'flex-grow': '1',
-        width: instance.inputLength / (instance.inputWidth - 32) + '%',
+        width: this.inputLength / (instance.inputWidth - 32) + '%',
         'max-width': instance.inputWidth - 42 + 'px'
       };
 
