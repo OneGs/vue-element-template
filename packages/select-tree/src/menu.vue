@@ -1,15 +1,12 @@
 <script>
 import ElSelectMenu from './select-dropdown.vue';
 import ElScrollbar from 'element-ui/packages/scrollbar';
-import Emitter from 'element-ui/src/mixins/emitter';
 import Option from './Option';
 
 export default {
   name: 'vue-treeselect--menu',
 
   inject: ['instance'],
-
-  mixins: [Emitter],
 
   components: {ElSelectMenu, ElScrollbar, Option},
 
@@ -35,6 +32,7 @@ export default {
 
       return (
         <el-select-menu
+          ref="popper"
           v-show={instance.menu.isOpen}
           appendToBody={instance.appendToBody}
         >
@@ -189,11 +187,15 @@ export default {
     },
 
     onMenuOpen() {
-      this.broadcast('ElSelectDropdown', 'updatePopper');
+      const { instance } = this;
+
+      instance.broadcast('ElSelectDropdown', 'updatePopper');
     },
 
     onMenuClose() {
-      this.broadcast('ElSelectDropdown', 'destroyPopper');
+      const { instance } = this;
+
+      instance.broadcast('ElSelectDropdown', 'destroyPopper');
     },
 
     handleMousedownEnterOption() {
@@ -218,6 +220,10 @@ export default {
       needWatch.map((watch) => {
         this.$watch(watch, handler);
       });
+    },
+
+    doDestroy() {
+      this.$refs.popper && this.$refs.popper.doDestroy();
     }
   },
 
@@ -232,7 +238,10 @@ export default {
         class="el-select-tree__menu"
         onMousedown={this.handleMousedownEnterOption}
       >
-        <transition name="el-zoom-in-top">
+        <transition
+          name="el-zoom-in-top"
+          on-after-leave={this.doDestroy}
+        >
           {this.renderMenu()}
         </transition>
       </div>

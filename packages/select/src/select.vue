@@ -448,6 +448,7 @@
 
         this.navigateOptions(direction);
       },
+
       handleComposition(event) {
         const text = event.target.value;
         if (event.type === 'compositionend') {
@@ -458,6 +459,7 @@
           this.isOnComposition = !isKorean(lastCharacter);
         }
       },
+  
       handleQueryChange(val) {
         if (this.previousQuery === val || this.isOnComposition) return;
         if (

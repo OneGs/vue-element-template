@@ -38,6 +38,8 @@ import {
   INDEX
 } from '../constants';
 
+import Emitter from 'element-ui/src/mixins/emitter';
+
 function sortValueByIndex(a, b) {
   let i = 0;
   do {
@@ -97,6 +99,8 @@ export default {
       default: ''
     }
   },
+
+  mixins: [Emitter],
 
   props: {
     /**
@@ -892,6 +896,9 @@ export default {
         this.handleRemoteSearch();
       } else {
         this.handleLocalSearch();
+        this.$nextTick(() => {
+          this.broadcast('ElSelectDropdown', 'updatePopper');
+        });
       }
 
       this.$emit(
