@@ -1,6 +1,7 @@
 <script>
 import ElCollapseTransition from 'element-ui/src/transitions/collapse-transition';
 import ElCheckbox from 'element-ui/packages/checkbox';
+import Emitter from 'element-ui/src/mixins/emitter';
 import { onLeftClick } from './utils';
 import {CHECKED, INDETERMINATE} from './constants';
 
@@ -12,6 +13,8 @@ const Option = {
   components: { ElCollapseTransition, ElCheckbox },
 
   inject: ['instance'],
+
+  mixins: [Emitter],
 
   props: {
     node: {
@@ -31,6 +34,17 @@ const Option = {
       const { instance, node } = this;
 
       return instance.shouldShowOptionInMenu(node);
+    }
+  },
+
+  watch: {
+    shouldExpand() {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          // wait menu re-render then re-calculate popper
+          this.dispatch('ElSelectDropdown', 'updatePopper');
+        }, 300);
+      });
     }
   },
 
