@@ -2,37 +2,35 @@
 @import "common/var";
 
 .arrow {
+  width: 24px;
   display: table-cell;
   vertical-align: middle;
-  width: 24px;
   text-align: center;
-  line-height: 0;
-}
-
-.el-select-tree__option-arrow-placeholder {
-  @extend .arrow;
 }
 
 @include b(select-tree) {
-  position: relative;
-  cursor: default;
-  background: $--color-white;
-  color: $--tree-font-color;
-  display: inline-block;
   width: 100%;
+  position: relative;
+  display: inline-block;
+
+  /* input */
 
   .el-input__inner {
     cursor: pointer;
+
+    &:focus {
+      border-color: $--select-input-focus-border-color;
+    }
   }
 
   .is-focus .el-input__inner {
-    border-color: #409EFF;
+    border-color: $--select-input-focus-border-color;
   }
 
   .el-tag__close.el-icon-close {
-    background-color: #C0C4CC;
-    color: #909399;;
     flex-shrink: 0;
+    color: $--color-white;;
+    background-color: $--color-text-placeholder;
 
     &:hover {
       color: #FFFFFF;
@@ -40,50 +38,69 @@
     }
   }
 
-  @include e(control) {}
+  @include e(caret) {
+    font-size: 14px;
+    color: $--color-text-placeholder;
+    transition: transform .3s;
+    transform: rotateZ(180deg);
+    cursor: pointer;
+
+    &.is-reverse {
+      transform: rotateZ(0deg);
+    }
+  }
+
+  /* menu */
 
   @include e(menu) {}
 
-  @include e(list) {}
-
   @include e(list-item) {
-
+    display: block;
   }
 
+  @include e(value-multi) {
+    position: relative;
+  }
+
+  /* option */
+
   @include e(option) {
+    height: 34px;
+    line-height: 34px;
     display: flex;
     align-items: center;
-    height: 32px;
+
     &:hover {
-      background-color: #F5F7FA;
+      background-color: $--select-option-hover-background;
     }
 
     @include m(selected){
-      color: #409EFF;
       font-weight: bold;
+      color: $--select-option-selected-font-color;
+      background-color: $--select-dropdown-background;
     }
 
     @include m(highlight) {
-      background-color: #F5F7FA;
+      background-color: $--select-option-hover-background;
     }
 
     @include m(disabled) {
-      color: #C0C4CC;
       cursor: not-allowed;
+      color: $--font-color-disabled-base;
     }
 
     @include m(hide) {
       display: none;
     }
 
-    @include m(matched) {
-      &.is-flat-result {
-        padding: 0 15px !important;
-      }
+    &.is-flat-result {
+      padding: 0 20px !important;
     }
 
-    &.is-flat-result {
-      padding: 0 15px !important;
+    @include m(matched) {
+      &.is-flat-result {
+        padding: 0 20px !important;
+      }
     }
   }
 
@@ -95,98 +112,6 @@
     @extend .arrow;
   }
 
-  @include e(icon-item) {
-    cursor: pointer;
-    color: #C0C4CC;
-    font-size: 12px;
-    transform: rotate(0deg);
-    transition: transform 0.3s ease-in-out;
-    padding: 6px;
-  }
-
-  @include e(option-arrow--rotated) {
-    transform: rotate(90deg);
-  }
-
-  @include e(label) {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: table-cell;
-    padding-left: 5px;
-    max-width: 100%;
-    vertical-align: middle;
-    cursor: inherit;
-  }
-
-  @include e(label-container) {
-    font-size: 14px;
-    flex: 1;
-    vertical-align: middle;
-    cursor: pointer;
-    width: 100%;
-    table-layout: fixed;
-    color: inherit;
-    display: flex;
-    align-items: center;
-  }
-
-  @include e(caret) {
-    color: #C0C4CC;
-    font-size: 14px;
-    transition: transform .3s;
-    transform: rotateZ(180deg);
-    cursor: pointer;
-
-    &.is-reverse {
-      transform: rotateZ(0deg);
-    }
-  }
-
-  @include e(tags) {
-    position: absolute;
-    line-height: normal;
-    white-space: normal;
-    z-index: 1;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .el-tag {
-    box-sizing: border-box;
-    border-color: transparent;
-    margin: 2px 0 2px 6px;
-    background-color: #f0f2f5;
-    display: flex;
-    max-width: 100%;
-    align-items: center;
-  }
-
-  @include e(checkbox) {
-    display: block;
-    margin: auto;
-    width: 12px;
-    height: 12px;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 2px;
-    position: relative;
-    transition: all .2s cubic-bezier(.075,.82,.165,1);
-
-    @include m(unchecked) {
-      border-color: #e0e0e0;
-      background: #fff;
-    }
-
-    @include m(indeterminate) {
-      border-color: #039be5;
-      background: #039be5;
-    }
-  }
-
   @include e(checkbox-container) {
     display: table-cell;
     width: 20px;
@@ -196,18 +121,20 @@
     vertical-align: middle;
   }
 
-  @include e(tip-text) {
-    padding: 10px 0;
-    margin: 0;
-    text-align: center;
-    color: #999;
-    font-size: 14px;
-    display: inline-block;
-    width: 100%;
-    box-sizing: border-box;
+  @include e(checkbox) {
+    margin: auto;
+    display: block;
+    border-radius: 2px;
+    transition: all .2s cubic-bezier(.075,.82,.165,1);
 
-    &.is-left {
-      text-align: left;
+    @include m(unchecked) {
+      background: #fff;
+      border-color: #e0e0e0;
+    }
+
+    @include m(indeterminate) {
+      border-color: $--color-primary;
+      background: $--color-primary;
     }
   }
 
@@ -222,7 +149,78 @@
     margin-left: 4px;
   }
 
-  @include e(value-multi) {
-    position: relative;
+  /** icon */
+
+  @include e(icon-item) {
+    font-size: 12px;
+    padding: 6px;
+    cursor: pointer;
+    color: $--color-text-placeholder;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  @include e(option-arrow--rotated) {
+    transform: rotate(90deg);
+  }
+
+  /* label */
+
+  @include e(label-container) {
+    flex: 1;
+    width: 100%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  @include e(label) {
+    cursor: pointer;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 5px;
+    vertical-align: middle;
+  }
+
+  /* tags */
+
+  .el-tag {
+    box-sizing: border-box;
+    border-color: transparent;
+    margin: 2px 0 2px 6px;
+    background-color: $--cascader-tag-background;
+    display: flex;
+    max-width: 100%;
+    align-items: center;
+  }
+
+  @include e(tags) {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* tips */
+
+  @include e(tip-text) {
+    padding: 10px 0;
+    margin: 0;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+
+    &.is-left {
+      text-align: left;
+    }
   }
 }
