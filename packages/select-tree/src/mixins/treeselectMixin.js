@@ -367,6 +367,11 @@ export default {
       default: Infinity
     },
 
+    limitCollapsed: {
+      type: Boolean,
+      default: false
+    },
+
     /**
      * Function that processes the message shown when selected elements pass the defined limit.
      * @type {function(number): string}

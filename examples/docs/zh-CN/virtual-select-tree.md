@@ -678,6 +678,56 @@ vue-treeselect支持根据用户类型动态加载和更改整个选项列表。
 ```
 :::
 
+### 边界条件
+
+有时会存在一个极端情况，这些问题会导致样式出现问题，为了解决这些问题。select-tree对边界条件做了特殊处理。
+
+:::demo
+
+```html
+<template>
+    <div>
+        <div style="margin-bottom: 1rem">单选</div>
+        <el-select-tree :options="options" v-model="value" />
+
+        <div style="margin: 1rem 0">多选</div>
+        <el-select-tree :options="options" multiple v-model="multiValue" />
+    </div>
+</template>
+
+<script>
+    const OPTIONS = [
+        {
+            id: 'apple',
+            label: '这是无敌超级好吃的陕西省西安市零铺村某某家亲自通过农家肥经过快速通道得到的苹果，黑龙江省齐齐哈尔市讷河市六合镇黎明奶牛场🍎',
+        },
+        {
+            id: 'grapes',
+            label: '这是无敌超级好吃的陕西省西安市零铺村某某家亲自通过农家肥经过快速通道得到的葡萄，黑龙江省齐齐哈尔市讷河市六合镇黎明奶牛场🍇',
+        },
+        {
+            id: 'pear',
+            label: '这是无敌超级好吃的陕西省西安市零铺村某某家亲自通过农家肥经过快速通道得到的梨子，黑龙江省齐齐哈尔市讷河市六合镇黎明奶牛场🍐',
+        },
+        {
+            id: 'strawberry',
+            label: '这是无敌超级好吃的陕西省西安市零铺村某某家亲自通过农家肥经过快速通道得到的草莓，黑龙江省齐齐哈尔市讷河市六合镇黎明奶牛场🍓',
+        }
+    ]
+
+    export default {
+        data() {
+            return {
+                value: null,
+                multiValue: null,
+                options: OPTIONS
+            }
+        },
+    }
+</script>
+```
+:::
+
 ### 自定义键名 & 自定义选项标签 & 自定义值标签
 
 如果通过AJAX加载的选项数据与vue-treeselect要求的数据结构不同，

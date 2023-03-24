@@ -110,6 +110,10 @@ export default {
           : node.label;
       };
 
+      const tagStyles = {
+        width: '60px'
+      };
+
       return (
         this.selectedLimitNodes.map(node =>
           <el-tag
@@ -118,6 +122,7 @@ export default {
             type="info"
             closable
             disable-transitions
+            style={tagStyles}
             onClick={() => this.deleteNode(node)}
             onClose={() => this.deleteNode(node)}>
             <span>{ renderLabel(node) }</span>
